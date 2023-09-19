@@ -1,33 +1,34 @@
 package Mass;
 
-public class ATD<T> {
+public class ATD {
 
-    private T[] mass;
+    private char[] mass;
 
-    ATD(T param) {
+    ATD(char[] param) {
         /*
         создать массив
          */
-        this.mass = (T[])new Object[10];
+        this.mass = (char[][])new Object[10];
     }
 
-    private int end() {
+    private Position end() {
         /*
         пока данный object не null, переходить на следующий
-        вернуть данный
+        вернуть позицию
          */
     }
 
-    private void insert(T x, int p) {
+    private void insert(char[] x, Position p) {
         /*
         если позиция есть:
-            ищем элемент с позицией p
-            вставляем элемент, остальные двигаем вправо
+            ищем элемент с позицией p (цикл с 0 до p)
+            вставляем элемент, элемент с номером p запомнить в временную переменную t
+            в цикле остальные двигаем вправо (с p+1 до end())
         если нет - ничего не делать
          */
     }
 
-    private int locate(T x) {
+    private Position locate(char[] x) {
         /*
         идем по списку с first
             если объект есть - вернуть позицию
@@ -35,7 +36,7 @@ public class ATD<T> {
          */
     }
 
-    private T retrieve(int p) throws Exception{
+    private char[] retrieve(Position p) throws Exception{
         /*
         идем по списку
             если находится элемент, то возвращаем его
@@ -43,7 +44,7 @@ public class ATD<T> {
          */
     }
 
-    private void delete(int p) {
+    private void delete(Position p) {
         /*
         идем по списку
             находим элемент, двигаем на него все элементы справа
@@ -51,13 +52,13 @@ public class ATD<T> {
          */
     }
 
-    private int next(int p) {
+    private Position next(Position p) {
         /*
         вернуть следующую позицию
          */
     }
 
-    private int previous(int p) {
+    private Position previous(Position p) {
         /*
         вернуть предыдущую позицию
          */
@@ -69,7 +70,7 @@ public class ATD<T> {
          */
     }
 
-    private int first() {
+    private Position first() {
         /*
         вернуть первый если массив не пуст
          */
@@ -79,5 +80,20 @@ public class ATD<T> {
         /*
         идти по списку и вывести на печать каждый узел
          */
+    }
+    
+    private class Position {
+
+    	int p;
+    	
+    	Position(int p) {
+    		this.p = p;
+    	}
+    	
+    	private boolean equals(Position q) {
+    		
+    		if(q.p == this.p) return true;
+    		else return false;
+    	}
     }
 }
