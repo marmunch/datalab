@@ -1,6 +1,10 @@
 package List;
 
 public class ATD {
+	
+	/*
+	 * проверять существование позиции!
+	 */
 
     private Node head; // голова списка
 
@@ -18,6 +22,12 @@ public class ATD {
         пока данный узел не null, переходить на следующий
         вернуть позицию последнего
          */
+    	
+    	Node current = head;
+    	while(current.next != null) {
+    		
+    	}
+    	return new Position(current.next);
     }
 
     // вставить объект в позицию
