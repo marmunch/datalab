@@ -40,12 +40,17 @@ public class ATD {
     }
 
     // вернуть объект в позиции
-    private char[] retrieve(Position p) throws Exception {
+    private char[] retrieve(Position p) throws MyException {
         /*
         идем по списку
             если находится элемент, то возвращаем его
         элемент не найден или p = end(), выбросить исключение
          */
+         try {
+         }
+         catch (IndexOutOfBoundsException e) {
+        	 System.out.println("Position Not Found");
+         }
     }
     
     // удалить объект в позиции
