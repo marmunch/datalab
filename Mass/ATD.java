@@ -2,13 +2,15 @@ package Mass;
 
 public class ATD {
 
-    private char[] mass;
+	private char[][] mass;
+    private char[] name;
+    private char[] address;
 
     ATD(char[] param) {
         /*
         создать массив
          */
-        this.mass = (char[][])new Object[10];
+        this.mass = new char[10][];
     }
 
     private Position end() {
