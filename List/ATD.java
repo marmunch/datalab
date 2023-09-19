@@ -109,13 +109,19 @@ public class ATD {
         /*
         идти по списку и вывести на печать каждый узел
          */
+    	Node current = head;
+    	while(current != null) {
+    		
+    		current = current.next;
+    	}
     }
     
     // класс нода
     private class Node {
 
-        char[] param;
-        Node next;
+        private char[] name;
+        private char[] address;
+        private Node next;
 
         // конструктор
         Node(char[] param) {
