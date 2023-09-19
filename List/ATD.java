@@ -1,56 +1,55 @@
 package List;
 
-public class ATD<T> {
+public class ATD {
 
-    private Node head;
+    private Node head; // голова списка
 
-    ATD(T param) {
+    // конструктор
+    ATD(char[] param) {
         /*
-        создать узел по введенным данным
-
+        создать узел
          */
         this.head = new Node(param);
     }
 
-    private Node end() {
+    // конец списка
+    private Position end() {
         /*
         пока данный узел не null, переходить на следующий
-        вернуть данный
+        вернуть позицию последнего
          */
-
-        Node current = head;
-        while(current.next != null) {
-            current = current.next();
-        }
-        return current.next;
     }
 
-    private void insert(Node x, Node p) {
+    // вставить объект в позицию
+    private void insert(char[] x, Position p) {
         /*
-        если позиция есть:
-            ищем элемент с позицией p
-            вставляем элемент, остальные двигаем вправо
+        если позиция есть (p < end()):
+            ищем элемент с позицией p (цикл с 0 до p)
+            вставляем копию элемента (next у вставляемого нода на элемент p, next у предыдущего на вставляемый)
         если нет - ничего не делать
          */
     }
 
-    private Node locate(Node x) {
+    // вернуть позицию по объекту
+    private Position locate(char[] x) {
         /*
-        идем по списку с head
+        идем по списку с first() до end()
             если объект есть - вернуть позицию
         если объекта нет - вернуть end()
          */
     }
 
-    private Node retrieve(Node p) throws Exception{
+    // вернуть объект в позиции
+    private char[] retrieve(Position p) throws Exception {
         /*
         идем по списку
             если находится элемент, то возвращаем его
         элемент не найден или p = end(), выбросить исключение
          */
     }
-
-    private void delete(Node p) {
+    
+    // удалить объект в позиции
+    private void delete(Position p) {
         /*
         идем по списку
             находим элемент, привязываем предыдущий к последующему от данного элемента
@@ -58,47 +57,97 @@ public class ATD<T> {
          */
     }
 
-    private Node next(Node p) {
+    // вернуть последующую позицию
+    private Position next(Position p) {
         /*
         вернуть следующую позицию
          */
+    	return new Position(p.p.next);
     }
 
-    private Node previous(Node p) {
+    // вернуть предыдущую позицию
+    private Position previous(Position p) {
         /*
         вернуть предыдущую позицию
+        пока позиция у след нода не p
+        	сохраняем позицию в t
+        вернуть позицию t
          */
+    	/*
+    	Node current = new Node(head);
+    	Position t = new Position(current);
+    	while(!next(t).equals(p)) {
+    		current = current.next;
+    		t = new Position(current);
+    	}
+    	return new Position(t);
+    	*/
     }
 
+    // обнулить список
     private void makenull() {
         /*
         сделать head = null
          */
     }
 
-    private Node first() {
+    // вернуть первую позицию
+    private Position first() {
+    	
         if(head != null)
-            return head;
-        else return end();
+            return new Position(head);
+        else return null;
     }
 
+    // вывести на экран
     private void printlist() {
         /*
         идти по списку и вывести на печать каждый узел
          */
     }
-
+    
+    // класс нода
     private class Node {
 
-        T param;
+        char[] param;
         Node next;
 
-        Node(T param) {
+        // конструктор
+        Node(char[] param) {
             this.param = param;
+            this.next = null;
         }
+        
+        // копирующий конструктор
+        Node(Node copy) {
+            this.param = copy.param;
+            this.next = copy.next;
+        }
+        
+        // вернуть объект
+        private char[] get() {
+        	return this.param;
+        }
+    }
 
-        private Node next() {
-            return this.next;
-        }
+    // класс позиции
+    private class Position {
+
+    	private Node p;  // нод
+    	
+    	// конструктор
+    	Position(Node p) {
+    		this.p = p;
+    	}
+    	
+    	// копирующий конструктор
+    	Position(Position copy) {
+    		this.p = copy.p;
+    	}
+    	
+    	private boolean equals(Position q) {
+    		if(this == q) return true;
+    		return q.p == this.p;
+    	}
     }
 }
