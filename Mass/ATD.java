@@ -1,25 +1,33 @@
 package Mass;
+import Item.Item;
 
 public class ATD {
 
 	private Item[] mass;
 	
-    ATD() {
+	ATD() {
         /*
         создать массив
          */
     	this.mass = new Item[10];
-    	mass[0] = new Item();
+    }
+	
+    ATD(char[] adr, char[] name) {
+        /*
+        создать массив
+         */
+    	this.mass = new Item[10];
+    	mass[0] = new Item(adr, name);
     }
 
-    private Position end() {
+    private int end() {
         /*
         пока данный object не null(элемент массива ), переходить на следующий
         вернуть позицию
          */
     }
 
-    private void insert(char[] x, Position p) {
+    private void insert(char[] x, int p) {
         /*
          * p > 0 and p < 10
         если позиция есть:
@@ -30,7 +38,7 @@ public class ATD {
          */
     }
 
-    private Position locate(char[] x) {
+    private int locate(char[] x) {
         /*
         идем по списку с first
             если объект есть - вернуть позицию
@@ -38,7 +46,7 @@ public class ATD {
          */
     }
 
-    private char[] retrieve(Position p) throws Exception{
+    private char[] retrieve(int p) throws Exception{
         /*
          * p > 0 and p < 10
         идем по списку
@@ -47,7 +55,7 @@ public class ATD {
          */
     }
 
-    private void delete(Position p) {
+    private void delete(int p) {
         /*
          * p > 0 and p < 10
         идем по списку
@@ -56,14 +64,14 @@ public class ATD {
          */
     }
 
-    private Position next(Position p) {
+    private int next(int p) {
         /*
          * p > 0 and p < 10
         вернуть следующую позицию
          */
     }
 
-    private Position previous(Position p) {
+    private int previous(int p) {
         /*
          * p > 0 and p < 10
         вернуть предыдущую позицию
@@ -74,10 +82,10 @@ public class ATD {
         /*
         сделать null
          */
-    	this.mass = new char[10][2][];
+    	this.mass = new Item[10];
     }
 
-    private Position first() {
+    private int first() {
         /*
         вернуть первый если массив не пуст
          */
@@ -89,22 +97,6 @@ public class ATD {
          */
     }
     
-    private class Item {
-    	
-    	private char[] address;
-    	private char[] name;
-
-    	Item() {
-    		this.address = new char[50];
-    		this.name = new char[30];
-    	}
-    	
-    	Item(char[] address, char[] name) {
-    		this.address = address;
-    		this.name = name;
-    	}
-    }
-    
     private class Position {
 
     	int p;
@@ -113,7 +105,7 @@ public class ATD {
     		this.p = p;
     	}
     	
-    	private boolean equals(Position q) {
+    	private boolean equals(int q) {
     		
     		if(q.p == this.p) return true;
     		else return false;
