@@ -10,10 +10,21 @@ public class Item {
     	}
     	
     	Item(char[] address, char[] name) {
-    		this.address = ;
-    		this.name = name;
-    		// скопировать посимвольно 
+    		this.address = new char[50];
+    		this.name = new char[30];
+    		
+    		int i;
+    		for(i = 0; i < 30; i++) {
+    			this.address[i] = address[i];
+    			this.name[i] = name[i];
+    		}
+    		for(i = 30; i < 50; i++) {
+    			this.address[i] = address[i];
+    		}
     	}
     	
-    	// equals
+    	public boolean equals(Item other) {
+    		if(this.address.equals(other.address) && this.name.equals(other.name)) return true;
+    		else return false;
+    	}
     }
