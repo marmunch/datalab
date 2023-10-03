@@ -2,17 +2,14 @@ package Mass;
 
 public class ATD {
 
-	private char[][][] mass;
-
-    ATD(char[] param) {
+	private Item[] mass;
+	
+    ATD() {
         /*
         создать массив
          */
-        this.mass = new char[10][2][];
-        for(int i = 0; i < 10; i++) {
-        	mass[i][0] = new char[30];
-        	mass[i][1] = new char[50];
-        }
+    	this.mass = new Item[10];
+    	mass[0] = new Item();
     }
 
     private Position end() {
@@ -90,6 +87,22 @@ public class ATD {
         /*
         идти по списку и вывести на печать каждый объект имя + адрес
          */
+    }
+    
+    private class Item {
+    	
+    	private char[] address;
+    	private char[] name;
+
+    	Item() {
+    		this.address = new char[50];
+    		this.name = new char[30];
+    	}
+    	
+    	Item(char[] address, char[] name) {
+    		this.address = address;
+    		this.name = name;
+    	}
     }
     
     private class Position {
