@@ -2,26 +2,29 @@ package Mass;
 
 public class ATD {
 
-	private char[][] mass;
-    private char[] name;
-    private char[] address;
+	private char[][][] mass;
 
     ATD(char[] param) {
         /*
         создать массив
          */
-        this.mass = new char[10][];
+        this.mass = new char[10][2][];
+        for(int i = 0; i < 10; i++) {
+        	mass[i][0] = new char[30];
+        	mass[i][1] = new char[50];
+        }
     }
 
     private Position end() {
         /*
-        пока данный object не null, переходить на следующий
+        пока данный object не null(элемент массива ), переходить на следующий
         вернуть позицию
          */
     }
 
     private void insert(char[] x, Position p) {
         /*
+         * p > 0 and p < 10
         если позиция есть:
             ищем элемент с позицией p (цикл с 0 до p)
             вставляем элемент, элемент с номером p запомнить в временную переменную t
@@ -40,6 +43,7 @@ public class ATD {
 
     private char[] retrieve(Position p) throws Exception{
         /*
+         * p > 0 and p < 10
         идем по списку
             если находится элемент, то возвращаем его
         элемент не найден или p = end(), выбросить исключение
@@ -48,6 +52,7 @@ public class ATD {
 
     private void delete(Position p) {
         /*
+         * p > 0 and p < 10
         идем по списку
             находим элемент, двигаем на него все элементы справа
         в списке нет элемента - ничего не делать
@@ -56,20 +61,23 @@ public class ATD {
 
     private Position next(Position p) {
         /*
+         * p > 0 and p < 10
         вернуть следующую позицию
          */
     }
 
     private Position previous(Position p) {
         /*
+         * p > 0 and p < 10
         вернуть предыдущую позицию
          */
     }
 
     private void makenull() {
         /*
-        сделать head = null
+        сделать null
          */
+    	this.mass = new char[10][2][];
     }
 
     private Position first() {
@@ -80,7 +88,7 @@ public class ATD {
 
     private void printlist() {
         /*
-        идти по списку и вывести на печать каждый узел
+        идти по списку и вывести на печать каждый объект имя + адрес
          */
     }
     
