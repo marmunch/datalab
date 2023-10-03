@@ -33,7 +33,7 @@ public class ATD {
     // вставить объект в позицию
     private void insert(char[] x, Position p) {
         /*
-        если позиция есть (p < end()):
+        если позиция есть (p != null):
             ищем элемент с позицией p (цикл с 0 до p)
             вставляем копию элемента (next у вставляемого нода на элемент p, next у предыдущего на вставляемый)
         если нет - ничего не делать
@@ -52,6 +52,7 @@ public class ATD {
     // вернуть объект в позиции
     private char[] retrieve(Position p) throws MyException {
         /*
+         * проверяем позицию на существование (p != null)
         идем по списку
             если находится элемент, то возвращаем его
         элемент не найден или p = end(), выбросить исключение
@@ -66,6 +67,7 @@ public class ATD {
     // удалить объект в позиции
     private void delete(Position p) {
         /*
+         * проверяем позицию на существование (p != null)
         идем по списку
             находим элемент, привязываем предыдущий к последующему от данного элемента
         в списке нет элемента - ничего не делать
@@ -75,6 +77,7 @@ public class ATD {
     // вернуть последующую позицию
     private Position next(Position p) {
         /*
+         * проверяем позицию на существование (p != null)
         вернуть следующую позицию
          */
     	return new Position(p.p.next);
@@ -83,6 +86,7 @@ public class ATD {
     // вернуть предыдущую позицию
     private Position previous(Position p) {
         /*
+         * проверяем позицию на существование (p != null)
         вернуть предыдущую позицию
         пока позиция у след нода не p
         	сохраняем позицию в t
@@ -134,20 +138,27 @@ public class ATD {
         private Node next;
 
         // конструктор
-        Node(char[] param) {
-            this.param = param;
+        Node(char[] name, char[] address) {
+            this.name = name;
+            this.address = address;
             this.next = null;
         }
         
         // копирующий конструктор
         Node(Node copy) {
-            this.param = copy.param;
+        	this.name = copy.name;
+            this.address = copy.address;
             this.next = copy.next;
         }
         
-        // вернуть объект
-        private char[] get() {
-        	return this.param;
+        // вернуть имя
+        private char[] getName() {
+        	return this.name;
+        }
+        
+        // вернуть адрес
+        private char[] getAddress() {
+        	return this.address;
         }
     }
 
