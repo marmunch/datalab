@@ -1,90 +1,88 @@
 package List;
+import Item.Item;
 
 public class ATD {
-	
-	/*
-	 * проверять существование позиции!
-	 */
 
     private Node head; // голова списка
 
     // конструктор
-    ATD(char[] param) {
+    ATD() {
         /*
         создать узел
          */
-        this.head = new Node(param);
+        this.head = null;
     }
 
     // конец списка
-    private Position end() {
+    public Position end() {
         /*
         пока данный узел не null, переходить на следующий
         вернуть позицию последнего
          */
     	
-    	Node current = head;
-    	while(current.next != null) {
-    		
-    	}
-    	return new Position(current.next);
+    	return new Position(null);
     }
 
     // вставить объект в позицию
-    private void insert(char[] x, Position p) {
+    public void insert(Item x, Position p) {
         /*
-        если позиция есть (p != null):
-            ищем элемент с позицией p (цикл с 0 до p)
-            вставляем копию элемента (next у вставляемого нода на элемент p, next у предыдущего на вставляемый)
-        если нет - ничего не делать
+         * если позиция вставки head или список null (p == head || head == null): 
+         *  	создать нод head;
+         *  	привязать к новой head старую (если head == null)
+         * если вставка в середину (p != null):
+         * 		в цикле дойти до позиции и проверить та ли это позиция (через equals)
+         * 		если позиция та, то начать вставку
+         * 			next у предыдущего на новый нод, next нового нода на текущий
+         * 		позиция не та - ничего не делать
+         * если вставка в конец:
+         * 		присоединить новый нод в конец
          */
     }
 
     // вернуть позицию по объекту
-    private Position locate(char[] x) {
+    public Position locate(Item x) {
         /*
         идем по списку с first() до end()
             если объект есть - вернуть позицию
-        если объекта нет - вернуть end()
+        если объекта нет - вернуть null
          */
     }
 
     // вернуть объект в позиции
-    private char[] retrieve(Position p) throws MyException {
+    public Item retrieve(Position p) {
         /*
-         * проверяем позицию на существование (p != null)
-        идем по списку
-            если находится элемент, то возвращаем его
-        элемент не найден или p = end(), выбросить исключение
+         * если (p != null) идем по списку
+         *		если находится элемент (сверяем позицию по equals), то возвращаем его	
+         * 		элемент не найден, выбросить исключение
+         * иначе выбросить исключение
+         IndexOutOfBoundsException
          */
-         try {
-         }
-         catch (IndexOutOfBoundsException e) {
-        	 System.out.println("Position Not Found");
-         }
     }
     
     // удалить объект в позиции
-    private void delete(Position p) {
+    public void delete(Position p) {
         /*
-         * проверяем позицию на существование (p != null)
-        идем по списку
-            находим элемент, привязываем предыдущий к последующему от данного элемента
-        в списке нет элемента - ничего не делать
+         * если удаляем head (p.equals(head)):
+         * 		ставим this.head = head.next;
+         * если в середину (p != null) идем по списку
+         *		если находится элемент (сверяем позицию по equals), привязываем предыдущий к последующему от данного элемента	
+         * 		элемент не найден - ничего не делать
+         * если p = null ничего не делать
          */
     }
 
     // вернуть последующую позицию
-    private Position next(Position p) {
+    public Position next(Position p) {
         /*
-         * проверяем позицию на существование (p != null)
-        вернуть следующую позицию
+         * если (p != null)
+         * вернуть следующую позицию
          */
-    	return new Position(p.p.next);
+    	if(p != null) return new Position(p.p.next);
+    	else return null;
     }
 
     // вернуть предыдущую позицию
-    private Position previous(Position p) {
+    public Position previous(Position p) {
         /*
          * проверяем позицию на существование (p != null)
         вернуть предыдущую позицию
@@ -104,14 +102,14 @@ public class ATD {
     }
 
     // обнулить список
-    private void makenull() {
+    public void makenull() {
         /*
         сделать head = null
          */
     }
 
     // вернуть первую позицию
-    private Position first() {
+    public Position first() {
     	
         if(head != null)
             return new Position(head);
@@ -119,7 +117,7 @@ public class ATD {
     }
 
     // вывести на экран
-    private void printlist() {
+    public void printlist() {
         /*
         идти по списку и вывести на печать каждый узел
          */
@@ -133,48 +131,29 @@ public class ATD {
     // класс нода
     private class Node {
 
-        private char[] name;
-        private char[] address;
+        Item item;
         private Node next;
 
         // конструктор
-        Node(char[] name, char[] address) {
-            this.name = name;
-            this.address = address;
+        Node() {
             this.next = null;
         }
         
         // копирующий конструктор
         Node(Node copy) {
-        	this.name = copy.name;
-            this.address = copy.address;
+        	// 
             this.next = copy.next;
-        }
-        
-        // вернуть имя
-        private char[] getName() {
-        	return this.name;
-        }
-        
-        // вернуть адрес
-        private char[] getAddress() {
-        	return this.address;
         }
     }
 
     // класс позиции
-    private class Position {
+    public class Position {
 
     	private Node p;  // нод
     	
     	// конструктор
     	Position(Node p) {
     		this.p = p;
-    	}
-    	
-    	// копирующий конструктор
-    	Position(Position copy) {
-    		this.p = copy.p;
     	}
     	
     	private boolean equals(Position q) {
