@@ -3,26 +3,23 @@ import Item.Item;
 
 public class ATD {
 
-    private Item[] mass;
-    private int size = 10;
-    private int last;
+    private Item[] mass;  // массив
+    private int size = 10; // размер массива
+    private int last;  // элемент после последнего занятого
 
     // конструктор
     ATD() {
-        /*
-        создать массив
-         */
         this.mass = null;
         last = 0;
     }
 
     // конструктор
-    ATD(char[] adr, char[] name) {
+    ATD(Item item) {
         /*
         создать массив
          */
         this.mass = new Item[size];
-        mass[0] = new Item(adr, name);
+        mass[0] = new Item(item);
     }
 
     // конец массива
@@ -43,27 +40,37 @@ public class ATD {
          *      mass[last] = new Item(x);
          *      last++;
          */
-    }
-
-    // двинуть массив вправо
-    private void move_right(int start, int end, Item time1) {
-        /*
-         * цикл с start до last-1 (переставляю элементы вправо по парам)
-         *      time2 = mas[i+1];
-         *      mas[i+1] = mas[i];
-         *      mas[i] = time1;
-         *      time1 = time2;
-         */
+        int pos = 0;
+        if(p.p > 0 && p.p < last) {
+            for(int i=0; i<last; i++) {
+                if(p.p == i) {
+                    pos = i;
+                    break;
+                }
+            }
+            for(int i=last; i>pos; i--) {
+                mass[i] = mass[i-1];
+            }
+            mass[pos] = new Item(x);
+        }
+        if(p.p == last) {
+            mass[last] = new Item(x);
+        }
+        last++;
     }
 
     // вернуть
-    public Position locate(char[] x) {
+    public Position locate(Item x) {
         /*
          * идти с 0 до last
          *      проверка элемента массива через equals
          *          true - вернуть позицию
          * элемент не найден - вернуть null
          */
+        for(int i=0; i<last; i++) {
+            if(x.equals(mass[i])) return new Position(mass[i]);
+        }
+        return null;
     }
 
     public Item retrieve(Position p) {
@@ -74,6 +81,12 @@ public class ATD {
          *              true - вернуть копию объекта
          * элемент не найден либо check_pos вернуло false - выбросить исключение
          */
+        if(p.p >= 0 && p.p < last) {
+            for(int i=0; i< last; i++) {
+                if(p.p == i) return new Item(mass[i]);
+            }
+        }
+        throw new IndexOutOfBoundsException();
     }
 
     public void delete(Position p) {
@@ -82,15 +95,12 @@ public class ATD {
          * если удаление первого или середины метод move_left(), переставить позицию
          * если конец то last-- и переставить позицию;
          */
-    }
-
-    // двинуть массив влево
-    private void move_left(int start, int end) {
-        /*
-         * цикл с start до last-1 (переставляю элементы влево по парам)
-         *      mas[i] = mas[i+1];
-         * last--;
-         */
+        if(p.p >= 0 && p.p < last) {
+            for(int i=p.p; i<last-1; i++) {
+                mass[i] = mass[i+1];
+            }
+        }
+        last--;
     }
 
     public Position next(Position p) {
@@ -98,6 +108,8 @@ public class ATD {
          * проверить позицию check_pos(p)
          * вернуть позицию p+1
          */
+        if(p.p >= 0 && p.p <= last) return new Position(p.p+1);
+        else return null;
     }
 
     public Position previous(Position p) {
@@ -105,6 +117,8 @@ public class ATD {
          * проверить позицию check_pos(p)
          * вернуть позицию p-1
          */
+        if(p.p >= 0 && p.p <= last) return new Position(p.p-1);
+        else return null;
     }
 
     public void makenull() {
@@ -114,22 +128,21 @@ public class ATD {
         last = 0;
     }
 
-    private boolean check_pos(Position p) {
-        /*
-         * если позиция > 0 и < last вернуть true
-         * иначе false
-         */
-    }
-
     public Position first() {
         /*
         вернуть 0 если массив не пуст
          */
+        if(mass != null) return new Position(0);
+        else return null;
     }
 
     public void printlist() {
         /*
         идти по списку и вывести на печать каждый объект (имя + адрес)
          */
+
+        for(int i = 0; i < last; i++) {
+            System.out.println(mass[i].toString());
+        }
     }
 }
