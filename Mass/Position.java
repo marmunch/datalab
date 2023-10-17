@@ -10,7 +10,7 @@ public class Position {
     }
 
     // сравнение
-    private boolean equals(Position q) {
+    protected boolean equals(Position q) {
 
         if(q.p == this.p) return true;
         else return false;
