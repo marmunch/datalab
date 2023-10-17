@@ -12,8 +12,8 @@ public class Position {
     }
 
     // сравнение
-    protected boolean equals(List.Position q) {
+    protected boolean equals(Position q) {
         if(this == q) return true;
-        return q.p == this.p;
+        return (q.p == this.p);
     }
 }
