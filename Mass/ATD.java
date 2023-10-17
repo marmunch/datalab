@@ -68,7 +68,7 @@ public class ATD {
          * элемент не найден - вернуть null
          */
         for(int i=0; i<last; i++) {
-            if(x.equals(mass[i])) return new Position(mass[i]);
+            if(x.equals(mass[i])) return new Position(i);
         }
         return null;
     }
