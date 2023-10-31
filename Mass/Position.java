@@ -2,7 +2,7 @@ package Mass;
 
 public class Position {
 
-    int p;
+    protected int p;
 
     // конструктор
     Position(int p) {
@@ -10,9 +10,11 @@ public class Position {
     }
 
     // сравнение
-    protected boolean equals(Position q) {
+    public boolean equal(Position q) {
 
         if(q.p == this.p) return true;
         else return false;
     }
+
+    public void print() { System.out.println(p); }
 }
