@@ -20,58 +20,162 @@ public class ATD {
 
         if(end != null)
             return new Position(end);
-        else return null;
+        else return new Position(null);
     }
 
     // вставить объект в позицию
     public void insert(Item x, Position p) {
         /*
-         * если позиция вставки start или список null (p == start || start == null):
-         *  	создать нод start;
-         *  	привязать к новой start старую (если start == null)
-         * если вставка в середину (p != null):
-         * 		в цикле дойти до позиции и проверить та ли это позиция (через equals)
-         * 		если позиция та, то начать вставку
-         * 			next у предыдущего на новый нод, next нового нода на текущий
-         * 		позиция не та - ничего не делать
-         * если вставка в end:
-         * 		присоединить новый нод в конец
-         *      поменять end на новый нод, присоединить prev
+        если вставка в пустой list
+            создать нод в start
+            start = end
+        если в list 1 элемент
+            в start.next привязать новый нод
+            end = start.next
+            end.prev = start
+        если вставка в конец (позиция null)
+            привязать к end нод, переопределить end
+            переопределить prev
+        если вставка в start
+            создать нод и вставить его в start
+            в start.next = старый start
+        вставка в середину
+            найти нод по позиции
+            привязать нод между предыдущим у current и current
          */
+
+        if (start == null || end == null) {
+            start = new Node(x);
+            end = start;
+            //System.out.println('1');
+        }
+        else if (end == start) {
+            start.next = new Node(x);
+            end = start.next;
+            end.prev = start;
+        }
+        else if (p == null || p.p == null) {
+            Node node = new Node(x);
+            Node prev = new Node(end);
+            end.next = node;
+            //start.print();
+            end = end.next;
+            end.prev = prev;
+            //start.next.print();
+            //System.out.println('2');
+        }
+        else if (start.item.equals(p.p.item)) { //start = p.p
+            Node node = new Node(x);
+            Node prev = new Node(start);
+            start = node;
+            //start.print();
+            start.next = prev;
+            //start.next.print();
+            //System.out.println('3');
+        }
+        else {
+            Node cur = findNode(start, p.p);
+            Node prev = cur.prev;
+            //p.p.print();
+            //prev.print();
+            //cur.print();
+            if(cur.item.equals(p.p.item)) {
+                prev.next = new Node(x);
+                prev = prev.next;
+                prev.next = cur;
+                //System.out.println('5');
+            }
+            //System.out.println('4');
+        }
+    }
+
+    // находить последний нод
+    private Node findNode(Node current, Node tofind) {
+
+        while(current != null && !current.equals(tofind)) {
+            current = current.next;
+        }
+        return current;
     }
 
     // вернуть позицию по объекту
     public Position locate(Item x) {
         /*
-        идем по списку с head до null
+        идем по списку с start до null
             если объект равен х по equals - вернуть позицию
         если объекта нет(цикл завершил свою работу и объект не нашел) - вернуть null
          */
+
+        Node current = start;
+        while (current != null) {
+            //current.print();
+            if (x.equals(current.item)) return new Position(current);
+            current = current.next;
+        }
+        return new Position(null);
     }
 
     // вернуть объект в позиции
     public Item retrieve(Position p) {
         /*
-         * если (p != null) идем с head
+         * если (p != null) идем с start
          *		если находится элемент (сверяем позицию по equals), то возвращаем его копию
          * 		элемент не найден, выбросить исключение
          * иначе выбросить исключение
          IndexOutOfBoundsException
          */
+
+        if (p != null) {
+            Node current = start;
+            while(current != null) {
+                if (current.equals(p.p)) return new Item(current.item);
+                current = current.next;
+            }
+        }
+        throw new IndexOutOfBoundsException();
     }
 
     // удалить объект в позиции
     public void delete(Position p) {
         /*
-         * если удаляем head (p.equals(head)):
-         * 		ставим this.head = head.next;
-         * иначе если в середину (p != null) идем по списку
+         * если удаляем start (p.equals(start)):
+         * 		ставим this.start = start.next;
+         * если удаляем end (p.equals(end)):
+         * 		ставим this.end = end.prev;
+         * иначе если середину или конец (p != null) идем по списку
          *		если находится элемент (сверяем позицию по equals),
          *          привязываем предыдущий к последующему от данного элемента,
          *          меняем Position на последующий
          * 		элемент не найден - ничего не делать
          * иначе ничего не делать
          */
+
+        if (p.p == start) {
+            start = start.next;
+            //System.out.println('1');
+        }
+        else if (p.p == end) {
+            end = end.prev;
+            //System.out.println('2');
+        }
+        else {
+            Node current = start.next;
+            //current.print();
+            Node time = start;
+            //time.print();
+            //p.p.print();
+            while (current != null) {
+                //System.out.println(p.p == current);
+                //current.print();
+                if (p.p == current) {
+                    time.next = current.next;
+                }
+                time = time.next;
+                current = current.next;
+            }
+            //System.out.println('3');
+        }
+        //System.out.println('4');
     }
 
     // вернуть последующую позицию
@@ -81,34 +185,37 @@ public class ATD {
          * вернуть следующую позицию
          */
         if(p != null) return new Position(p.p.next);
-        else return null;
+        else return new Position(null);
     }
 
     // вернуть предыдущую позицию
     public Position previous(Position p) {
         /*
-         * если p == null - искать позицию перед последней (null) (пока current.next != null)
-         * иначе time = null
-         *      идем по списку от head
-         *      если позиция временного совпадает с позицией текущего - вернуть копию time
-         *      в time сохраняем позицию данного нода
-         * позиции нет - вернуть null
+         * если (p != null)
+         * вернуть предыдущую позицию
          */
+        if(p != null) return new Position(p.p.prev);
+        else return new Position(null);
     }
 
     // обнулить список
     public void makenull() {
         /*
-        сделать head = null
+        сделать start и end = null
          */
+        start = null;
+        end = null;
     }
 
     // вернуть первую позицию
     public Position first() {
+        /*
+        вернуть start
+         */
 
         if(start != null)
             return new Position(start);
-        else return null;
+        else return new Position(null);
     }
 
     // вывести на экран
@@ -116,29 +223,50 @@ public class ATD {
         /*
         идти по списку и вывести на печать каждый узел
          */
-        Node current = head;
-        while(current != null) {
-
-            current = current.next;
+        if (start == null && end == null) System.out.println("List is empty");
+        else {
+            Node current = start;
+            while (current != null) {
+                System.out.println(current.item.toString());
+                current = current.next;
+            }
         }
     }
 
     // класс нода
     protected class Node {
 
-        Item item;
+        protected Item item;
         private Node next;
         private Node prev;
 
         // конструктор
-        Node() {
+        protected Node() {
             this.next = null;
+            this.prev = null;
+        }
+
+        // конструктор по Item
+        protected Node(Item item) {
+            this.item = new Item(item);
         }
 
         // копирующий конструктор
-        Node(Node copy) {
-            //
+        protected Node(Node copy) {
+            this.item = new Item(copy.item);
             this.next = copy.next;
+            this.prev = copy.prev;
+        }
+
+        protected void print() {
+
+            if (item != null) System.out.println(item);
+            else System.out.println("Item is null");
+        }
+
+        protected boolean equals(Node node) {
+            if(node != null) return this.item.equals(node.item);
+            return false;
         }
     }
 }
