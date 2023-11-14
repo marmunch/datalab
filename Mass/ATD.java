@@ -5,11 +5,11 @@ public class ATD {
 
     private Item[] mass;  // массив
     private int size = 10; // размер массива
-    private int last;  // элемент после последнего занятого
+    private int last;  // элемент первый свободный
 
     // конструктор
     public ATD() {
-        this.mass = null;
+        this.mass = new Item[size];
         last = 0;
     }
 
@@ -24,30 +24,16 @@ public class ATD {
     // вставка
     public void insert(Item x, Position p) {
         /*
-         * если массив пустой
-         *      создать item и вставить
-         * вставка в начало или середину (Position < size и >= 0)
+         * вставка (Position < size и >= 0)
          *      двигаем массив с конца вправо до нужной позиции
          *      в освободившуюся ячейку вставляем item
-         * вставка в конец
-         *      mass[last] = new Item(x);
-         *      last++;
          * позиция не найдена - ничего не делать
          */
-        if (mass == null) {
-            mass = new Item[size];
-            mass[last] = new Item(x);
-            last++;
-        }
-        else if(checkPos(p)) {
+        if(p.p >= 0 && p.p <= last) {
             for(int i=last; i > p.p; i--) {
                 mass[i] = mass[i-1];
             }
             mass[p.p] = new Item(x);
-            last++;
-        }
-        else if (p.p == last) {
-            mass[last] = new Item(x);
             last++;
         }
     }
@@ -73,15 +59,10 @@ public class ATD {
          * элемент не найден - выбросить исключение
          */
         //System.out.println(p.p);
-        if(checkPos(p)) {
+        if(p.p >= 0 && p.p < last) {
             return new Item(mass[p.p]);
         }
         throw new IndexOutOfBoundsException();
-    }
-
-    // проверка позиции
-    private boolean checkPos(Position p) {
-        return (p.p >= 0 && p.p < last);
     }
 
     public void delete(Position p) {
@@ -91,7 +72,7 @@ public class ATD {
                 уменьшить last
             иначе ничего не делать
          */
-        if(checkPos(p)) {
+        if(p.p >= 0 && p.p < last) {
             for(int i=p.p; i<last-1; i++) {
                 //System.out.println(mass[i]);
                 mass[i] = mass[i+1];
@@ -107,7 +88,7 @@ public class ATD {
         иначе вернуть last
          */
         //p.print();
-        if(checkPos(p)) return new Position(p.p+1);
+        if(p.p >= 0 && p.p < last) return new Position(p.p+1);
         else return new Position(last);
     }
 
@@ -142,9 +123,10 @@ public class ATD {
 
         if(last > 0) {
             for (int i = 0; i < last; i++) {
-                System.out.println(mass[i].toString());
+                System.out.println(mass[i]);
             }
         }
         else System.out.println("List is empty");
+        System.out.println();
     }
 }
