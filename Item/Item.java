@@ -52,6 +52,7 @@ public class Item {
         return true;
     }
 
+    // превратить в строку
     public String toString() {
         return "___Name: " + new String(name) + "; ___Address: " + new String(address);
     }
