@@ -21,6 +21,7 @@ public class Position {
         else return false;
     }
 
+    // печать
     public void print() {
         if (p != null) p.print();
         else System.out.println("Node is null");
