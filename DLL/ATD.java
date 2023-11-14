@@ -7,7 +7,7 @@ public class ATD {
     private Node end; // конец списка
 
     // конструктор
-    ATD() {
+    public ATD() {
         this.end = null;
         this.start = null;
     }
@@ -18,9 +18,7 @@ public class ATD {
         вернуть позицию последнего
          */
 
-        if(end != null)
-            return new Position(end);
-        else return new Position(null);
+        return new Position(null);
     }
 
     // вставить объект в позицию
@@ -44,36 +42,37 @@ public class ATD {
             привязать нод между предыдущим у current и current
          */
 
-        if (start == null || end == null) {
-            start = new Node(x);
-            end = start;
-            //System.out.println('1');
-        }
-        else if (end == start) {
-            start.next = new Node(x);
-            end = start.next;
+        // вставка в голову либо вставка в конец
+        if (end == start) { // в list 1 элемент
+            end = new Node(x);
+            start.next = end;
             end.prev = start;
-        }
-        else if (p == null || p.p == null) {
-            Node node = new Node(x);
-            Node prev = new Node(end);
-            end.next = node;
-            //start.print();
-            end = end.next;
-            end.prev = prev;
-            //start.next.print();
             //System.out.println('2');
+        }
+        else if (p == null || p.p == null) {  // вставка в end
+            if (start == null || end == null) { // list пуст
+                start = new Node(x);
+                end = start;
+                //System.out.println('1');
+            }
+            else {
+                Node node = new Node(x);
+                end.next = node;
+                node.prev = end;
+                end = end.next;
+                //System.out.println('3');
+            }
         }
         else if (start.item.equals(p.p.item)) { //start = p.p
             Node node = new Node(x);
-            Node prev = new Node(start);
-            start = node;
+            start.prev = node;
+            node.next = start;
+            start = start.prev;
             //start.print();
-            start.next = prev;
             //start.next.print();
-            //System.out.println('3');
+            //System.out.println('4');
         }
-        else {
+        else {// вставка в голову и это - общий случай
             Node cur = findNode(start, p.p);
             Node prev = cur.prev;
             //p.p.print();
@@ -81,11 +80,17 @@ public class ATD {
             //cur.print();
             if(cur.item.equals(p.p.item)) {
                 prev.next = new Node(x);
+                //prev.print();
                 prev = prev.next;
+                //prev.print();
                 prev.next = cur;
+                //prev.next.print();
+                prev.prev = cur.prev;
+                cur.prev = prev;
+                //prev.prev.print();
                 //System.out.println('5');
             }
-            //System.out.println('4');
+            //System.out.println('6');
         }
     }
 
@@ -135,6 +140,8 @@ public class ATD {
         throw new IndexOutOfBoundsException();
     }
 
+    // проверка существования позиции
+
     // удалить объект в позиции
     public void delete(Position p) {
         /*
@@ -152,10 +159,12 @@ public class ATD {
 
         if (p.p == start) {
             start = start.next;
+            start.prev = null;
             //System.out.println('1');
         }
         else if (p.p == end) {
             end = end.prev;
+            end.next = null;
             //System.out.println('2');
         }
         else {
@@ -169,6 +178,9 @@ public class ATD {
                 //current.print();
                 if (p.p == current) {
                     time.next = current.next;
+                    current = current.next;
+                    if(current != null) current.prev = time;
+                    break;
                 }
                 time = time.next;
                 current = current.next;
@@ -231,6 +243,14 @@ public class ATD {
                 current = current.next;
             }
         }
+        /*else {
+            Node current = end;
+            while (current != null) {
+                System.out.println(current.item.toString());
+                current = current.prev;
+            }
+        }*/
+        System.out.println();
     }
 
     // класс нода
