@@ -1,5 +1,5 @@
 import Item.Item;
-import Mass.*;
+import List.*;
 public class Main {
 
     public static void deleteDuplicates(ATD L) {
@@ -16,8 +16,10 @@ public class Main {
                 //L.end().print();
                 //q.print();
                 if(L.retrieve(p).equals(L.retrieve(q))) {
+                    Item x = L.retrieve(q);
                     L.delete(q);
-                    q = L.previous(q);
+                    q = L.locate(x);
+                    //q = L.previous(q);
                 }
                 q = L.next(q);
                 //i++;
@@ -45,10 +47,12 @@ public class Main {
         char[] nm4 = {'V', 'l', 'a', 'd', 'i', 'm', 'i', 'r'};
         Item post4 = new Item(adr4, nm4);
 
+        // вставка в пустой список
         list.insert(post1, list.end());
         list.printlist();
         System.out.println();
 
+        // заполнение дубликатами
         list.insert(post2, list.end());
         list.insert(post1, list.end());
         list.insert(post1, list.end());
@@ -56,43 +60,52 @@ public class Main {
         list.printlist();
         System.out.println();
 
+        // вставка в конец
         list.insert(post2, list.end());
         list.printlist();
         System.out.println();
 
+        // вставка в начало
         list.insert(post3, list.first());
         list.printlist();
         System.out.println();
 
+        // удаление дупликатов
         deleteDuplicates(list);
         list.printlist();
         System.out.println();
 
+        // вставка в позицию объекта
         Position pos1 = list.locate(post1);
         list.insert(post4, pos1);
         list.printlist();
         System.out.println();
 
+        // вытащить элемент по позиции
         Position pos4 = list.locate(post4);
         System.out.println(list.retrieve(pos4).toString());
         //System.out.println(pos1.equals(pos4));
         System.out.println();
 
+        // удалить следующий от позиции
         pos1 = list.locate(post1);
         list.delete(list.next(pos1));
         list.printlist();
         System.out.println();
 
+        // удалить в позиции
         Position pos3 = list.locate(post3);
         list.delete(pos3);
         list.printlist();
         System.out.println();
 
+        // удаление предыдущего
         pos1 = list.locate(post1);
         list.delete(list.previous(pos1));
         list.printlist();
         System.out.println();
 
+        // сделать список пустым
         list.makenull();
         list.printlist();
         System.out.println();
