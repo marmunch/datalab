@@ -13,15 +13,6 @@ public class ATD {
         last = 0;
     }
 
-    // конструктор
-    public ATD(Item item) {
-        /*
-        создать массив
-         */
-        this.mass = new Item[size];
-        mass[0] = new Item(item);
-    }
-
     // конец массива
     public Position end() {
         /*
@@ -33,37 +24,32 @@ public class ATD {
     // вставка
     public void insert(Item x, Position p) {
         /*
-         * вставка в начало или середину (Position < size и > 0)
-         *      ищем позицию (equals)
-         *      позиция найдена - метод move_right() с Position до end
+         * если массив пустой
+         *      создать item и вставить
+         * вставка в начало или середину (Position < size и >= 0)
+         *      двигаем массив с конца вправо до нужной позиции
+         *      в освободившуюся ячейку вставляем item
          * вставка в конец
          *      mass[last] = new Item(x);
          *      last++;
+         * позиция не найдена - ничего не делать
          */
-        int pos = 0;
         if (mass == null) {
             mass = new Item[size];
-            mass[0] = new Item(x);
+            mass[last] = new Item(x);
+            last++;
         }
         else if(checkPos(p)) {
-            pos = findPos(p.p);
-            for(int i=last; i>pos; i--) {
+            for(int i=last; i > p.p; i--) {
                 mass[i] = mass[i-1];
             }
-            mass[pos] = new Item(x);
+            mass[p.p] = new Item(x);
+            last++;
         }
-        else if(p.p == last) {
+        else if (p.p == last) {
             mass[last] = new Item(x);
+            last++;
         }
-        last++;
-    }
-
-    // поиск
-    private int findPos(int it) {
-        for(int i=0; i<last; i++) {
-            if(it == i) return i;
-        }
-        return last;
     }
 
     // вернуть
@@ -83,41 +69,42 @@ public class ATD {
     public Item retrieve(Position p) {
         /*
          * проверить позицию check_pos(p)
-         *      c 0 до last
-         *          проверка позиции через equals
-         *              true - вернуть копию объекта
-         * элемент не найден либо check_pos вернуло false - выбросить исключение
+         *      вернуть копию item
+         * элемент не найден - выбросить исключение
          */
         //System.out.println(p.p);
         if(checkPos(p)) {
-            int pos = findPos(p.p);
-            return new Item(mass[pos]);
+            return new Item(mass[p.p]);
         }
         throw new IndexOutOfBoundsException();
     }
 
+    // проверка позиции
     private boolean checkPos(Position p) {
         return (p.p >= 0 && p.p < last);
     }
 
     public void delete(Position p) {
         /*
-         * проверить позицию
-         * если удаление первого или середины метод move_left(), переставить позицию
-         * если конец то last-- и переставить позицию;
+            проверка позиции
+                переставить массив влево
+                уменьшить last
+            иначе ничего не делать
          */
         if(checkPos(p)) {
             for(int i=p.p; i<last-1; i++) {
+                //System.out.println(mass[i]);
                 mass[i] = mass[i+1];
             }
+            last--;
         }
-        last--;
     }
 
     public Position next(Position p) {
         /*
-         * проверить позицию check_pos(p)
-         * вернуть позицию p+1
+        проверить позицию check_pos(p)
+            вернуть p+1
+        иначе вернуть last
          */
         //p.print();
         if(checkPos(p)) return new Position(p.p+1);
@@ -126,8 +113,9 @@ public class ATD {
 
     public Position previous(Position p) {
         /*
-         * проверить позицию check_pos(p)
-         * вернуть позицию p-1
+        проверить позицию p.p >= 0 && p.p <= last
+            вернуть p-1
+        иначе вернуть last
          */
         if(p.p >= 0 && p.p <= last) return new Position(p.p-1);
         else return new Position(last);
@@ -142,10 +130,9 @@ public class ATD {
 
     public Position first() {
         /*
-        вернуть 0 если массив не пуст
+        вернуть 0
          */
-        if(mass != null) return new Position(0);
-        else return new Position(last);
+        return new Position(0);
     }
 
     public void printlist() {
@@ -153,8 +140,11 @@ public class ATD {
         идти по списку и вывести на печать каждый объект (имя + адрес)
          */
 
-        for(int i = 0; i < last; i++) {
-            System.out.println(mass[i].toString());
+        if(last > 0) {
+            for (int i = 0; i < last; i++) {
+                System.out.println(mass[i].toString());
+            }
         }
+        else System.out.println("List is empty");
     }
 }
