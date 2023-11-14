@@ -2,7 +2,7 @@ package Mass;
 
 public class Position {
 
-    protected int p;
+    protected int p; // позиция
 
     // конструктор
     Position(int p) {
@@ -16,5 +16,6 @@ public class Position {
         else return false;
     }
 
+    // вывести позицию
     public void print() { System.out.println(p); }
 }
