@@ -50,40 +50,37 @@ public class Main {
         // вставка в пустой список
         list.insert(post1, list.end());
         list.printlist();
-        System.out.println();
 
         // заполнение дубликатами
         list.insert(post2, list.end());
+        //list.printlist();
         list.insert(post1, list.end());
+        //list.printlist();
         list.insert(post1, list.end());
+        //list.printlist();
         list.insert(post3, list.end());
         list.printlist();
-        System.out.println();
 
         // вставка в конец
         list.insert(post2, list.end());
         list.printlist();
-        System.out.println();
 
         // вставка в начало
         list.insert(post3, list.first());
         list.printlist();
-        System.out.println();
 
         // удаление дупликатов
         deleteDuplicates(list);
         list.printlist();
-        System.out.println();
 
         // вставка в позицию объекта
         Position pos1 = list.locate(post1);
         list.insert(post4, pos1);
         list.printlist();
-        System.out.println();
 
         // вытащить элемент по позиции
         Position pos4 = list.locate(post4);
-        System.out.println(list.retrieve(pos4).toString());
+        System.out.println(list.retrieve(pos4));
         //System.out.println(pos1.equals(pos4));
         System.out.println();
 
@@ -91,23 +88,19 @@ public class Main {
         pos1 = list.locate(post1);
         list.delete(list.next(pos1));
         list.printlist();
-        System.out.println();
 
         // удалить в позиции
         Position pos3 = list.locate(post3);
         list.delete(pos3);
         list.printlist();
-        System.out.println();
 
         // удаление предыдущего
         pos1 = list.locate(post1);
         list.delete(list.previous(pos1));
         list.printlist();
-        System.out.println();
 
         // сделать список пустым
         list.makenull();
         list.printlist();
-        System.out.println();
     }
 }
