@@ -22,15 +22,12 @@ public class ATD {
     // вставить объект в позицию
     public void insert(Item x, Position p) {
         /*
-        если список пустой
-            в head создать новый нод
         если позиция Null
-            ищем последний
-            присваиваем его next новый нод
-        если объект нашелся и это голова
-            создать нод
-            сделать его next копией головы
-            сделать нод головой
+            если список пустой
+                в head создать новый нод
+            иначе
+                ищем последний
+                присваиваем его next новый нод
         иначе ищем объект в середине списка
             находим предыдущий от Position
             находим сам нод объекта
@@ -38,18 +35,20 @@ public class ATD {
         объект не найден - ничего не делаем
          */
 
-        if (head == null) {
-            head = new Node(x);
-            //System.out.println('1');
+        if (p == null || p.p == null) {
+            if (head == null) {
+                head = new Node(x);
+                //System.out.println('1');
+            }
+            else {
+                Node cur = findNodePrev(null);
+                //cur.print();
+                cur.next = new Node(x);
+                //cur.next.print();
+                //System.out.println('2');
+            }
         }
-        else if (p == null || p.p == null) {
-            Node cur = findNodePrev(head, null);
-            //cur.print();
-            cur.next = new Node(x);
-            //cur.next.print();
-            //System.out.println('2');
-        }
-        else if (head.item.equals(p.p.item)) {
+        else if (head == p.p) {
             Node node = new Node(x);
             Node prev = new Node(head);
             head = node;
@@ -59,37 +58,47 @@ public class ATD {
             //System.out.println('3');
         }
         else {
-            Node prev = findNodePrev(head, p.p);
+            Node prev = findNodePrev(p.p);
             //prev.print();
-            Node cur = findNode(head, p.p);
+            Node cur = findNode(p.p);
             //p.p.print();
             //cur.print();
             if(cur.item.equals(p.p.item)) {
                 prev.next = new Node(x);
                 prev = prev.next;
                 prev.next = cur;
-                //System.out.println('5');
+                //System.out.println('4');
             }
-            //System.out.println('4');
+            //System.out.println('3');
         }
     }
 
-    // находить последний нод
-    private Node findNode(Node current, Node tofind) {
+    // находить последний узел
+    private Node findNode(Node find) {
 
-        while(current != null && !current.equals(tofind)) {
+        Node current = head;
+        while(current != find) { // проверка на узел
             current = current.next;
         }
         return current;
     }
 
     // метод поиска позиции возвращать предыдущую (проверять head перед методом)
-    private Node findNodePrev(Node current, Node end) {
+    private Node findNodePrev(Node find) {
 
-        while(current.next != end) {
+        Node curprev = head;
+        Node current = head.next;
+        //head.print();
+        /*if (head.next == null) {
+            System.out.println();
+        } else {
+            head.next.print();
+        }*/
+        while(current != find && current != null) { // проверка на узел
+            curprev = curprev.next;
             current = current.next;
         }
-        return current;
+        return curprev;
     }
 
     // вернуть позицию по объекту
@@ -193,8 +202,8 @@ public class ATD {
             return new Position(null);
         }
         else {
-            Node current = findNode(head, p.p);
-            Node prev = findNodePrev(head, current);
+            Node current = findNode(p.p);
+            Node prev = findNodePrev(current);
             if (current.equals(p.p)) return new Position(prev);
             else return new Position(null);
         }
@@ -233,6 +242,7 @@ public class ATD {
                 current = current.next;
             }
         }
+        System.out.println();
     }
 
     // класс нода
@@ -264,7 +274,7 @@ public class ATD {
             else System.out.println("Item is null");
         }
 
-        // equals 
+        // equals
         protected boolean equals(Node node) {
             if(node != null) return this.item.equals(node.item);
             return false;
