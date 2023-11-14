@@ -22,16 +22,20 @@ public class ATD {
     // вставить объект в позицию
     public void insert(Item x, Position p) {
         /*
-         * если позиция вставки head или список null (p == head || head == null):
-         *  	создать нод head;
-         *  	привязать к новой head старую (если head == null)
-         * если вставка в середину (p != null):
-         * 		в цикле дойти до позиции и проверить та ли это позиция (через equals)
-         * 		если позиция та, то начать вставку
-         * 			next у предыдущего на новый нод, next нового нода на текущий
-         * 		позиция не та - ничего не делать
-         * если вставка в конец:
-         * 		присоединить новый нод в конец
+        если список пустой
+            в head создать новый нод
+        если позиция Null
+            ищем последний
+            присваиваем его next новый нод
+        если объект нашелся и это голова
+            создать нод
+            сделать его next копией головы
+            сделать нод головой
+        иначе ищем объект в середине списка
+            находим предыдущий от Position
+            находим сам нод объекта
+            если их item равны c p.p - делаем вставку
+        объект не найден - ничего не делаем
          */
 
         if (head == null) {
@@ -108,10 +112,9 @@ public class ATD {
     // вернуть объект в позиции
     public Item retrieve(Position p) {
         /*
-         * если (p != null) идем с head
-         *		если находится элемент (сверяем позицию по equals), то возвращаем его копию
-         * 		элемент не найден, выбросить исключение
-         * иначе выбросить исключение
+         если (p != null) идем с head
+            если находится элемент (сверяем позицию по equals), то возвращаем его копию
+         иначе выбросить исключение
          IndexOutOfBoundsException
          */
 
@@ -128,21 +131,22 @@ public class ATD {
     // удалить объект в позиции
     public void delete(Position p) {
         /*
-         * если удаляем head (p.equals(head)):
-         * 		ставим this.head = head.next;
-         * иначе если середину или конец (p != null) идем по списку
-         *		если находится элемент (сверяем позицию по equals),
-         *          привязываем предыдущий к последующему от данного элемента,
-         *          меняем Position на последующий
-         * 		элемент не найден - ничего не делать
-         * иначе ничего не делать
+        если удаляем голову
+            голове присвоить next
+        если удаляем середину или конец
+            во временную сохраняем ссылку на head
+            в текущую - head.next
+            пока не дойдем до конца списка
+                если ссылка p.p == ссылка текущей
+                    делаем next предыдущего = next текущего (т.е. нод между ними пропадает из цепи)
+                переставляем указатели временного и текущего
          */
 
         if (p.p == head) {
             head = head.next;
             //System.out.println('1');
         }
-        else if (p != null) {
+        else {
             Node current = head.next;
             //current.print();
             Node time = head;
@@ -153,6 +157,7 @@ public class ATD {
                 //current.print();
                 if (p.p == current) {
                     time.next = current.next;
+                    break;
                 }
                 time = time.next;
                 current = current.next;
@@ -167,6 +172,7 @@ public class ATD {
         /*
          * если (p != null)
          * вернуть следующую позицию
+         * иначе вернуть null
          */
         if(p.p != null) return new Position(p.p.next);
         else return new Position(null);
@@ -175,12 +181,12 @@ public class ATD {
     // вернуть предыдущую позицию
     public Position previous(Position p) {
         /*
-         * если p == null - искать позицию перед последней (null) (пока current.next != null)
-         * иначе time = null
-         *      идем по списку от head
-         *      если позиция временного совпадает с позицией текущего - вернуть копию time
-         *      в time сохраняем позицию данного нода
-         * позиции нет - вернуть null
+        если позиция = head
+            вернуть null
+        иначе
+            найти нод и его предыдущий
+            если нод равен p вернуть предыдущий
+            иначе вернуть null
          */
 
         if (p.p.equals(head)) {
@@ -204,6 +210,10 @@ public class ATD {
 
     // вернуть первую позицию
     public Position first() {
+        /*
+        если список не пуст, вернуть head
+        иначе - null
+         */
 
         if(head != null)
             return new Position(head);
@@ -228,8 +238,8 @@ public class ATD {
     // класс нода
     protected class Node {
 
-        protected Item item;
-        private Node next;
+        protected Item item; // объект
+        private Node next; // ссылка на следующий
 
         // конструктор
         protected Node() {
@@ -247,12 +257,14 @@ public class ATD {
             this.next = copy.next;
         }
 
+        // печать
         protected void print() {
 
             if (item != null) System.out.println(item);
             else System.out.println("Item is null");
         }
 
+        // equals 
         protected boolean equals(Node node) {
             if(node != null) return this.item.equals(node.item);
             return false;
