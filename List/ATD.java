@@ -48,7 +48,7 @@ public class ATD {
                 //System.out.println('2');
             }
         }
-        else if (head == p.p) {
+        else if (head.item.equals(p.p.item)) {
             Node node = new Node(x);
             Node prev = new Node(head);
             head = node;
@@ -73,7 +73,7 @@ public class ATD {
         }
     }
 
-    // находить последний узел
+    // находить заданный узел
     private Node findNode(Node find) {
 
         Node current = head;
@@ -94,9 +94,10 @@ public class ATD {
         } else {
             head.next.print();
         }*/
-        while(current != find && current != null) { // проверка на узел
+        while(current != null) { // проверка на узел
             curprev = curprev.next;
             current = current.next;
+            if (current == find) return curprev;
         }
         return curprev;
     }
@@ -130,7 +131,7 @@ public class ATD {
         if (p != null) {
             Node current = head;
             while(current != null) {
-                if (current.equals(p.p)) return new Item(current.item);
+                if (current.item.equals(p.p.item)) return new Item(current.item);
                 current = current.next;
             }
         }
@@ -156,21 +157,11 @@ public class ATD {
             //System.out.println('1');
         }
         else {
-            Node current = head.next;
-            //current.print();
-            Node time = head;
+            Node time = findNodePrev(p.p);
+            Node nxt = findNode(p.p).next;
+            time.next = nxt;
             //time.print();
             //p.p.print();
-            while (current != null) {
-                //System.out.println(p.p == current);
-                //current.print();
-                if (p.p == current) {
-                    time.next = current.next;
-                    break;
-                }
-                time = time.next;
-                current = current.next;
-            }
             //System.out.println('2');
         }
         //System.out.println('3');
@@ -198,13 +189,13 @@ public class ATD {
             иначе вернуть null
          */
 
-        if (p.p.equals(head)) {
+        if (p.p.item.equals(head.item)) {
             return new Position(null);
         }
         else {
             Node current = findNode(p.p);
             Node prev = findNodePrev(current);
-            if (current.equals(p.p)) return new Position(prev);
+            if (current.item.equals(p.p.item)) return new Position(prev);
             else return new Position(null);
         }
     }
@@ -274,10 +265,5 @@ public class ATD {
             else System.out.println("Item is null");
         }
 
-        // equals
-        protected boolean equals(Node node) {
-            if(node != null) return this.item.equals(node.item);
-            return false;
-        }
     }
 }
