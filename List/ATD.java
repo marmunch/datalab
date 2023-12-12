@@ -78,6 +78,7 @@ public class ATD {
 
         Node current = head;
         while(current != find) { // проверка на узел
+            //System.out.println('1');
             current = current.next;
         }
         return current;
@@ -94,7 +95,8 @@ public class ATD {
         } else {
             head.next.print();
         }*/
-        while(current != null) { // проверка на узел
+        while(current != find) { // проверка на узел
+            //System.out.println('1');
             curprev = curprev.next;
             current = current.next;
             if (current == find) return curprev;
@@ -229,6 +231,7 @@ public class ATD {
         else {
             Node current = head;
             while (current != null) {
+
                 System.out.println(current.item.toString());
                 current = current.next;
             }
