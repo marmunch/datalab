@@ -43,33 +43,36 @@ public class ATD {
             привязать нод между предыдущим у current и current
          */
 
-        if (p == null || p.p == null) {  // вставка в end
+        if (p.p == null) {  // вставка в null
             if (start == null || end == null) { // list пуст
                 start = new Node(x);
                 end = start;
                 //System.out.println('1');
+                return;
             }
-            else if (end == start) {
+            if (end == start) {  // вставка в конец когда элемент один
                 end = new Node(x);
                 start.next = end;
                 end.prev = start;
                 //System.out.println('2');
+                return;
             }
-            else {
-                Node node = new Node(x);
-                end.next = node;
-                node.prev = end;
-                end = end.next;
-                //System.out.println('3');
-            }
+            // вставка в конец
+            Node node = new Node(x);
+            end.next = node;
+            node.prev = end;
+            end = end.next;
+            return;
+            //System.out.println('3');
         }
-        else if (end == start) { // в list 1 элемент
+        if (end == start) { // в list 1 элемент вставка в старт
             start = new Node(x);
             end.prev = start;
             start.next = end;
             //System.out.println('4');
+            return;
         }
-        else if (start == p.p) { //start = p.p
+        if (start == p.p) { // вставка в голову
             Node node = new Node(x);
             start.prev = node;
             node.next = start;
@@ -77,36 +80,15 @@ public class ATD {
             //start.print();
             //start.next.print();
             //System.out.println('5');
+            return;
         }
-        else {// вставка в голову и это - общий случай
-            Node cur = findNode(start, p.p);
-            Node prev = cur.prev;
-            //p.p.print();
-            //prev.print();
-            //cur.print();
-            if(cur.item.equals(p.p.item)) {
-                prev.next = new Node(x);
-                //prev.print();
-                prev = prev.next;
-                //prev.print();
-                prev.next = cur;
-                //prev.next.print();
-                prev.prev = cur.prev;
-                cur.prev = prev;
-                //prev.prev.print();
-                //System.out.println('6');
-            }
-            //System.out.println('7');
-        }
-    }
-
-    // находить последний нод
-    private Node findNode(Node current, Node tofind) {
-
-        while(current != null && !current.equals(tofind)) {
-            current = current.next;
-        }
-        return current;
+        // вставка в голову и это - общий случай
+        Node copy = new Node(p.p);
+        p.p.item = new Item(x);
+        p.p.next = copy;
+        Node cur = p.p.next;
+        cur.prev = p.p;
+        //System.out.println('6');
     }
 
     // вернуть позицию по объекту
@@ -163,37 +145,23 @@ public class ATD {
          * иначе ничего не делать
          */
 
-        if (p.p == start) {
+        if (p.p == start) {  // удаляем голову
             start = start.next;
             start.prev = null;
             //System.out.println('1');
+            return;
         }
-        else if (p.p == end) {
+        if (p.p == end) {  // удаляем хвост
             end = end.prev;
             end.next = null;
             //System.out.println('2');
+            return;
         }
-        else {
-            Node current = start.next;
-            //current.print();
-            Node time = start;
-            //time.print();
-            //p.p.print();
-            while (current != null) {
-                //System.out.println(p.p == current);
-                //current.print();
-                if (p.p == current) {
-                    time.next = current.next;
-                    current = current.next;
-                    if(current != null) current.prev = time;
-                    break;
-                }
-                time = time.next;
-                current = current.next;
-            }
-            //System.out.println('3');
-        }
-        //System.out.println('4');
+        // удаляем середину
+        p.p.next = p.p.next.next;
+        Node cur = p.p.next;
+        cur.prev = p.p;
+        //System.out.println('3');
     }
 
     // вернуть последующую позицию
