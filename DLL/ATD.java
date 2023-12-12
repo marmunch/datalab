@@ -24,10 +24,6 @@ public class ATD {
     // вставить объект в позицию
     public void insert(Item x, Position p) {
         /*
-        если в list 1 элемент
-            в start.next привязать новый нод
-            end = start.next
-            end.prev = start
         если позиция null
             если вставка в пустой list
                 создать нод в start
@@ -35,6 +31,10 @@ public class ATD {
             вставка в конец
                 привязать к end нод, переопределить end
                 переопределить prev
+        если в list 1 элемент вставить либо в голову либо в конец в зависимости от позиции
+            в start.next привязать новый нод
+            end = start.next
+            end.prev = start
         если вставка в start
             создать нод и вставить его в start
             в start.next = старый start
@@ -43,34 +43,31 @@ public class ATD {
             привязать нод между предыдущим у current и current
          */
 
-        // вставка в голову либо вставка в конец
-        if (end == start) { // в list 1 элемент
-            if (p == null || p.p == null) {
-                end = new Node(x);
-                start.next = end;
-                end.prev = start;
+        if (p == null || p.p == null) {  // вставка в end
+            if (start == null || end == null) { // list пуст
+                start = new Node(x);
+                end = start;
                 //System.out.println('1');
             }
-            else { // поменять тут на вставку в голову
+            else if (end == start) {
                 end = new Node(x);
                 start.next = end;
                 end.prev = start;
                 //System.out.println('2');
-            }
-        }
-        else if (p == null || p.p == null) {  // вставка в end
-            if (start == null || end == null) { // list пуст
-                start = new Node(x);
-                end = start;
-                //System.out.println('3');
             }
             else {
                 Node node = new Node(x);
                 end.next = node;
                 node.prev = end;
                 end = end.next;
-                //System.out.println('4');
+                //System.out.println('3');
             }
+        }
+        else if (end == start) { // в list 1 элемент
+            start = new Node(x);
+            end.prev = start;
+            start.next = end;
+            //System.out.println('4');
         }
         else if (start == p.p) { //start = p.p
             Node node = new Node(x);
