@@ -35,53 +35,45 @@ public class ATD {
         объект не найден - ничего не делаем
          */
 
-        if (p == null || p.p == null) {
-            if (head == null) {
+        if (p.p == null) {  // если позиция null
+            if (head == null) {  // список пустой
                 head = new Node(x);
                 //System.out.println('1');
+                return;
             }
-            else {
-                Node cur = findNodePrev(null);
-                //cur.print();
-                cur.next = new Node(x);
-                //cur.next.print();
-                //System.out.println('2');
-            }
+            // вставка в последний
+            Node cur = findNodeLast(); //cur.print();
+            cur.next = new Node(x); //cur.next.print();
+            //System.out.println('2');
+            return;
         }
-        else if (head.item.equals(p.p.item)) {
+        if (head == p.p) {  // вставка в голову
             Node node = new Node(x);
             Node prev = new Node(head);
-            head = node;
-            //head.print();
-            head.next = prev;
-            //head.next.print();
+            head = node; //head.print();
+            head.next = prev; //head.next.print();
             //System.out.println('3');
+            return;
         }
-        else {
-            Node prev = findNodePrev(p.p);
-            //prev.print();
-            Node cur = findNode(p.p);
-            //p.p.print();
-            //cur.print();
-            if(cur.item.equals(p.p.item)) {
-                prev.next = new Node(x);
-                prev = prev.next;
-                prev.next = cur;
-                //System.out.println('4');
-            }
-            //System.out.println('3');
-        }
+        // вставка в середину
+        Node cur = findNodePrev(p.p).next; //cur.print(); //p.p.print();
+        Node copy = new Node(cur);
+        cur.next = copy;
+        cur.item = new Item(x);
+
     }
 
-    // находить заданный узел
-    private Node findNode(Node find) {
+    // !!!метод ищет последний элемент в списке, второй возвращает предыдущий
+    // находить последний узел
+    private Node findNodeLast() {
 
-        Node current = head;
-        while(current != find) { // проверка на узел
-            //System.out.println('1');
+        Node curprev = head;
+        Node current = head.next;
+        while(current != null) {
             current = current.next;
+            curprev = curprev.next;
         }
-        return current;
+        return curprev;
     }
 
     // метод поиска позиции возвращать предыдущую (проверять head перед методом)
@@ -89,14 +81,7 @@ public class ATD {
 
         Node curprev = head;
         Node current = head.next;
-        //head.print();
-        /*if (head.next == null) {
-            System.out.println();
-        } else {
-            head.next.print();
-        }*/
         while(current != find) { // проверка на узел
-            //System.out.println('1');
             curprev = curprev.next;
             current = current.next;
             if (current == find) return curprev;
@@ -113,8 +98,7 @@ public class ATD {
          */
 
         Node current = head;
-        while (current != null) {
-            //current.print();
+        while (current != null) { //current.print();
             if (x.equals(current.item)) return new Position(current);
             current = current.next;
         }
@@ -154,19 +138,17 @@ public class ATD {
                 переставляем указатели временного и текущего
          */
 
+        if (p.p == null) return;
         if (p.p == head) {
             head = head.next;
             //System.out.println('1');
+            return;
         }
-        else {
-            Node time = findNodePrev(p.p);
-            Node nxt = findNode(p.p).next;
-            time.next = nxt;
-            //time.print();
-            //p.p.print();
-            //System.out.println('2');
-        }
-        //System.out.println('3');
+        Node time = findNodePrev(p.p);
+        Node nxt = time.next.next;
+        time.next = nxt; //time.print(); //p.p.print();
+        //System.out.println('2');
+        return;
     }
 
     // вернуть последующую позицию
@@ -194,12 +176,10 @@ public class ATD {
         if (p.p.item.equals(head.item)) {
             return new Position(null);
         }
-        else {
-            Node current = findNode(p.p);
-            Node prev = findNodePrev(current);
-            if (current.item.equals(p.p.item)) return new Position(prev);
-            else return new Position(null);
-        }
+        Node prev = findNodePrev(p.p);
+        Node current = prev.next;
+        if (current.item.equals(p.p.item)) return new Position(prev);
+        else return new Position(null);
     }
 
     // обнулить список
@@ -240,23 +220,23 @@ public class ATD {
     }
 
     // класс нода
-    protected class Node {
+    public class Node {
 
-        protected Item item; // объект
+        private Item item; // объект
         private Node next; // ссылка на следующий
 
         // конструктор
-        protected Node() {
+        private Node() {
             this.next = null;
         }
 
         // конструктор по Item
-        protected Node(Item item) {
+        private Node(Item item) {
             this.item = new Item(item);
         }
 
         // копирующий конструктор
-        protected Node(Node copy) {
+        public Node(Node copy) {
             this.item = new Item(copy.item);
             this.next = copy.next;
         }
