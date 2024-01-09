@@ -1,14 +1,14 @@
 package Stack;
 import Item.Item;
 
-public class StackMass {
+public class Mass {
 
     private Item[] S;  // стек
     private int last;  // последний занятый
     private final int size = 10;
 
     // конструктор по умолчанию
-    public StackMass() {
+    public Mass() {
 
         S = new Item[size];
         last = -1;
