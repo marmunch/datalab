@@ -18,7 +18,7 @@ public class ATD {
         вернуть позицию последнего
          */
 
-        return new Position(null);
+        return new Position(end);
     }
 
     // вставить объект в позицию
@@ -43,33 +43,20 @@ public class ATD {
             привязать нод между предыдущим у current и current
          */
 
-        if (p.p == null) {  // вставка в null
-            if (start == null || end == null) { // list пуст
-                start = new Node(x);
-                end = start;
-                //System.out.println('1');
-                return;
-            }
-            if (end == start) {  // вставка в конец когда элемент один
-                end = new Node(x);
-                start.next = end;
-                end.prev = start;
-                //System.out.println('2');
-                return;
-            }
-            // вставка в конец
-            Node node = new Node(x);
-            end.next = node;
-            node.prev = end;
-            end = end.next;
+        if (start == null || end == null) {  // вставка в null
+            start = new Node(x);
+            end = start;
+            System.out.println('1');
             return;
-            //System.out.println('3');
         }
         if (end == start) { // в list 1 элемент вставка в старт
-            start = new Node(x);
-            end.prev = start;
+            end = new Node(x);
+            //start.print();
+            //end.print();
             start.next = end;
-            //System.out.println('4');
+            end.prev = start;
+
+            System.out.println('2');
             return;
         }
         if (start == p.p) { // вставка в голову
@@ -79,16 +66,16 @@ public class ATD {
             start = start.prev;
             //start.print();
             //start.next.print();
-            //System.out.println('5');
+            System.out.println('3');
             return;
         }
-        // вставка в голову и это - общий случай
+        // общий случай
         Node copy = new Node(p.p);
         p.p.item = new Item(x);
         p.p.next = copy;
         Node cur = p.p.next;
         cur.prev = p.p;
-        //System.out.println('6');
+        System.out.println('4');
     }
 
     // вернуть позицию по объекту
@@ -158,9 +145,8 @@ public class ATD {
             return;
         }
         // удаляем середину
-        p.p.next = p.p.next.next;
-        Node cur = p.p.next;
-        cur.prev = p.p;
+        Node cur = p.p.prev;
+        cur.next = p.p.next;
         //System.out.println('3');
     }
 
@@ -212,8 +198,9 @@ public class ATD {
         if (start == null && end == null) System.out.println("List is empty");
         else {
             Node current = start;
-            while (current != null) {
+            while (true) {
                 System.out.println(current.item.toString());
+                if (current == end) break;
                 current = current.next;
             }
         }
