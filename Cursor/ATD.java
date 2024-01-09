@@ -4,23 +4,29 @@ import Item.Item;
 public class ATD {
 
     private Element[] mass;  // массив
-    private int size = 10; // размер массива
-    private int space;  // элемент первый свободный
-    private int start; // указатель на первй элемент
+    private final int size = 10; // размер массива
+    private int space;  // начало списка свободных
+    private int start; // указатель на первый элемент
 
     // конструктор
     public ATD() {
-        this.mass = new Element[size];
-        space = 0;
         start = -1;
+        space = 0;
+        mass = new Element[size];
+
+        for (int i=0; i<size-1; i++) {
+            mass[i] = new Element(i+1);
+        }
+        mass[size-1] = new Element(-1);
     }
+
 
     // конец массива
     public Position end() {
         /*
         вернуть позицию последнего
          */
-        return new Position(space);
+        return new Position(-1);
     }
 
     // вставка
@@ -47,6 +53,92 @@ public class ATD {
             в space поместить item и сделать его next = p.p
             space передается первому незанятому
          */
+
+        // вставка в голову
+        //System.out.println(p.p + " " + start);
+        if (p.p == start) {
+            // вставка в пустой
+            if (start == -1) {
+                //System.out.println(space + " " + start);
+                mass[space].item = new Item(x);
+                mass[space].next = -1;
+
+                space++;
+                start++;
+                System.out.println("1");
+                return;
+            }
+            // вставка в голову, но список не пустой
+
+            mass[space].item = new Item(x);
+            mass[space].next = start;
+
+            start = space;
+            space = mass[space].next;
+            System.out.println("2");
+            return;
+        }
+
+        // вставка в конец
+        if (p.p == -1) {
+
+            int last = findLast();
+            mass[last].next = space;
+
+            int next = mass[space].next;
+            mass[space].next = -1;
+            mass[space].item = new Item(x);
+
+            space = next;
+            System.out.println("3");
+            return;
+        }
+
+        // общий случай
+
+        int prev = findPrev(p.p);
+        if (prev < 0) {
+            System.out.println("5");
+            return;
+        }
+
+        Element current = mass[mass[prev].next];
+        current.next = space;
+        space = mass[space].next;
+
+        mass[space].item = current.item;
+        mass[space].next = current.next;
+        System.out.println("4");
+    }
+
+    // найти последний в списке
+    private int findLast() {
+
+        int current = start;
+        int prev = -1;
+
+        while (current != -1) {
+            prev = current;
+            current = mass[current].next;
+        }
+
+        return prev;
+    }
+
+    // найти предыдущий
+    private int findPrev(int pos) {
+
+        int next = start;
+        int current = -1;
+
+        while (next != -1) {
+            if (next == pos) { return current; }
+
+            current = next;
+            next = mass[next].next;
+        }
+
+        return -1;
     }
 
     // вернуть
@@ -56,38 +148,31 @@ public class ATD {
          *      если элемент найден - вернуть его позицию
          * элемент не найден - вернуть свободную позицию
          */
-        Element el = mass[start];
-        int i = start;
-        while (i >= 0) {
-            if(x.equals(mass[i].item)) return new Position(i);
-            i = el.next;
-            el = mass[el.next];
+        int cur = start;
+        while (cur != -1) {
+            if (mass[cur].item.equals(x)) { return new Position(cur); }
+            cur = mass[cur].next;
         }
-        return new Position(space);
-    }
-
-    private boolean checkPos(int i) {
-        Element el = mass[start];
-        int time = start;
-        while (time >= 0) {
-            if (i == time) return true;
-            time = el.next;
-            el = mass[el.next];
-        }
-        return false;
+        return new Position(-1);
     }
 
     public Item retrieve(Position p) {
         /*
          * проверить позицию
+         * вернуть объект в старте
          *      вернуть копию item
          * элемент не найден - выбросить исключение
          */
-        //System.out.println(p.p);
-        if(checkPos(p.p)) {
-            return new Item(mass[p.p].item);
+
+        if (p.p == start) { return new Item(mass[start].item); }
+        if (findPrev(p.p) == -1 || p.p == -1) { throw new ArrayIndexOutOfBoundsException(); }
+
+        int cur = start;
+        while (cur != -1) {
+            if (cur == p.p) { return mass[cur].item; }
+            cur = mass[cur].next;
         }
-        throw new IndexOutOfBoundsException();
+        return new Item();
     }
 
     public void delete(Position p) {
@@ -103,27 +188,57 @@ public class ATD {
         удаление конца
             найти элемент перед концом и его next = -1
          */
+        // удаление головы
+        if (p.p == start) {
+            start = mass[start].next;
+            return;
+        }
+
+        int prev = findPrev(p.p);
+        if (prev == -1) { throw new ArrayIndexOutOfBoundsException(); }
+
+        // удаление конца
+        if (mass[p.p].next == -1) {
+            mass[prev].next = -1;
+            return;
+        }
+        // удаление середины
+        int del = mass[prev].next;
+
+        mass[prev].next = mass[mass[prev].next].next;
+        p.p = mass[prev].next;
+
+        mass[del].next = space;
+        space = del;
     }
 
     public Position next(Position p) {
         /*
-        проверить позицию checkPos(p)
-            вернуть next
-        иначе вернуть space
+        проверить позицию и при false выбросить исключение
+        вернуть голову если предыдущего нет
+        вернуть next
          */
         //p.print();
-        if(checkPos(p.p)) return new Position(mass[p.p].next);
-        else return new Position(space);
+
+        int prev = findPrev(p.p);
+        if ((prev == -1 && start == -1) || p.p == -1) { throw new ArrayIndexOutOfBoundsException(); }
+
+        if (prev == -1) {
+            return new Position(mass[start].next);
+        }
+
+        return new Position(mass[p.p].next);
     }
 
     public Position previous(Position p) {
         /*
-        проверить позицию checkPos(p)
-            найти предыдущий и вернуть его позицию
-        иначе вернуть space
+        проверить позицию и при false выбросить исключение
+        вернуть голову если предыдущего нет
+        вернуть next
          */
-        if(checkPos(p.p)) return new Position(p.p-1);
-        else return new Position(space);
+        if (p.p == start) { throw new ArrayIndexOutOfBoundsException(); }
+        int prev = findPrev(p.p);
+        return new Position(prev);
     }
 
     public void makenull() {
@@ -136,7 +251,7 @@ public class ATD {
 
     public Position first() {
         /*
-        вернуть 0
+        вернуть start
          */
         return new Position(start);
     }
@@ -146,13 +261,14 @@ public class ATD {
         идти по списку и вывести на печать каждый объект (имя + адрес)
          */
 
-        if(start >= 0) {
-            int time = start;
-            Element current = mass[start];
-            while (time >= 0) {
-                System.out.println(mass[time].item);
-                time = current.next;
-                current = mass[time];
+        if (start >= 0) {
+            int cur = start;
+            int r = 0;
+            while (cur != -1) {
+                System.out.println(mass[cur].item.toString());
+                cur = mass[cur].next;
+                r++;
+                if(r==5) break;
             }
         }
         else System.out.println("List is empty");
@@ -160,20 +276,26 @@ public class ATD {
     }
 
     // класс для элемента массива, в котором содержится next и item
-    protected class Element {
+    private static class Element {
 
-        Item item;
-        int next;
+        private Item item;
+        private int next;
 
         // конструктор по умолчанию
-        protected Element() {
+        private Element() {
             item = null;
             next = 0;
         }
 
-        // конструктор
-        protected Element(Item item, int next) {
+        // копирующий конструктор
+        private Element(Item item, int next) {
             this.item = new Item(item);
+            this.next = next;
+        }
+
+        // иниц конструктор
+        private Element(int next) {
+            this.item = null;
             this.next = next;
         }
     }
