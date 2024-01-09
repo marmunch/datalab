@@ -138,7 +138,7 @@ public class ATD {
                 переставляем указатели временного и текущего
          */
 
-        if (p.p == null) return;
+        if (p.p == null || head == null) return;
         if (p.p == head) {
             head = head.next;
             //System.out.println('1');
@@ -222,7 +222,7 @@ public class ATD {
     // класс нода
     public class Node {
 
-        private Item item; // объект
+        public Item item; // объект
         private Node next; // ссылка на следующий
 
         // конструктор
