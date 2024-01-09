@@ -1,13 +1,14 @@
 package Queue;
+
 import Item.Item;
 
-public class QueueMass {
+public class Mass {
 
     Item[] Q;
     int tail; // конец очереди
     final int size = 10;
 
-    public QueueMass() {
+    public Mass() {
 
         tail = -1;
         Q = new Item[size];
