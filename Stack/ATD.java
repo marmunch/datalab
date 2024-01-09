@@ -1,56 +1,57 @@
 package Stack;
 import Item.Item;
-import List.*;
 
-public class StackATD {
+public class Mass {
 
-    private ATD S;  // стек
+    private Item[] S;  // стек
+    private int last;  // последний занятый
+    private final int size = 10;
 
     // конструктор по умолчанию
-    public StackATD() {
+    public Mass() {
 
-        S = new ATD();
+        S = new Item[size];
+        last = -1;
     }
 
     // сделать пустым
     public void makenull() {
 
-        S.makenull();
+        last = -1;
     }
 
     // вернуть копию элемента
     public Item top() {
 
-        return new Item(S.retrieve(S.first()));
+        if (last < size && last >= 0)
+            return new Item(S[last]);
+        return null;
     }
 
     // вернуть копию элемента и удалить его в стеке
     public Item pop() {
 
-        //S.first().print();
-        if (!S.first().equal(S.end())) {
-            Item copy = new Item(S.retrieve(S.first()));
-            S.delete(S.first());
-            return copy;
-        }
-        return null;
+        last--;
+        return new Item(S[last+1]);
     }
 
     // добавить в стек
     public void push(Item item) {
 
-        S.insert(item, S.first());
+        if (last < size-1)
+            S[++last] = new Item(item);
+        else System.out.println("Stack is FULL!");
     }
 
     // проверка на пустоту
     public boolean empty() {
 
-        return S.first().equal(S.end());
+        return last < 0;
     }
 
     // проверка на заполненность
     public boolean full() {
 
-        return false;
+        return last == size-1;
     }
 }
