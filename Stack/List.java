@@ -2,12 +2,12 @@ package Stack;
 import Item.Item;
 import List.ATD;
 
-public class StackList {
+public class List {
 
     private Node S;  // стек (голова списка)
 
     // конструктор по умолчанию
-    public StackList() {
+    public List() {
 
         S = null;
     }
