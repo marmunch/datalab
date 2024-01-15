@@ -20,12 +20,13 @@ public class ADT {
     // сделать ключ d равным r
     public void assign(char[] d, char[] r) {
 
-        if (M.first().equals(M.end())) {
+        //System.out.println(M.first().equal(M.end()));
+        if (M.first().equal(M.end())) {
             M.insert(new Item(d, r), M.first());
             return;
         }
 
-        Item t = this.findByKey(d);
+        Item t = findByKey(d);
         if (t != null) {
             Item.copyArray(r, t.name);
             return;
@@ -37,8 +38,8 @@ public class ADT {
     // найти значение по ключу
     private Item findByKey(char[] key) {
         // с первой позиции до последней, переход через next
-        for (Position cur = this.M.first(); !cur.equals(this.M.end()); cur = this.M.next(cur)) {
-            if (Item.equalsArray(this.M.retrieve(cur).address, key)) {
+        for (Position cur = M.first(); !cur.equal(M.end()); cur = M.next(cur)) {
+            if (Item.equalsArray(M.retrieve(cur).address, key)) {
 
                 return cur.p.item;
             }
