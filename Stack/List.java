@@ -37,24 +37,18 @@ public class List {
 
     // вернуть копию элемента и удалить его в стеке
     public Item pop() {
+        // вставлять в голову, снимать с головы
 
-        Node end = findPrev(null);
-        Item copy = new Item(end.item);
-        Node preend = findPrev(end);
-        preend.next = null;
-        return copy;
+        Item result = new Item(S.item);
+        S = S.next;
+        return result;
     }
 
     // добавить в стек
     public void push(Item item) {
 
-        if (S == null) {
-            S = new Node(item);
-        }
-        else {
-            Node end = findPrev(null);
-            end.next = new Node(item);
-        }
+        Node next = S;
+        S = new Node(new Item(item), next);
     }
 
     // проверка на пустоту
@@ -81,8 +75,10 @@ public class List {
         }
 
         // конструктор по Item
-        protected Node(Item item) {
+        protected Node(Item item, Node next) {
+
             this.item = new Item(item);
+            this.next = next;
         }
 
         // печать
