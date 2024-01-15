@@ -12,14 +12,11 @@ public class List {
         protected Item item; // объект
         private Node next; // ссылка на следующий
 
-        // конструктор
-        protected Node() {
-            this.next = null;
-        }
-
         // конструктор по Item
-        protected Node(Item item) {
+        protected Node(Item item, Node next) {
+
             this.item = new Item(item);
+            this.next = next;
         }
 
         // печать
@@ -45,48 +42,39 @@ public class List {
     // вернуть первый в очереди
     public Item front() {
 
-        return new Item(tail.item);
+        // вернуть голову
+        return new Item(tail.next.item);
     }
 
     // вернуть первый и удалить его из очереди
     public Item dequeue() {
 
-        Item copy = new Item(tail.item);
-        tail = tail.next;
-        return copy;
-    }
-
-    private Node findPrev(Node find) {
-
-        Node current = tail.next;
-        Node prev = tail;
-        while (current != find) {
-            current = current.next;
-            prev = prev.next;
+        // один объект в списке
+        if (tail == tail.next) {
+            Item headItem = tail.item;
+            tail = null;
+            return new Item(headItem);
         }
-        return prev;
-    }
+        // общий случай
+        Node head = tail.next;
+        tail.next = head.next;
 
-    private Node findLast() {
-
-        Node curprev = tail;
-        Node current = tail.next;
-        while(current != null) {
-            current = current.next;
-            curprev = curprev.next;
-        }
-        return curprev;
+        return new Item(head.item);
     }
 
     // вставить в конец очереди
     public void enqueue(Item x) {
 
+        // вставка в пустой список
         if (tail == null) {
-            tail = new Node(x);
+            tail = new Node(x, null);
+            tail.next = tail;
             return;
         }
-        Node last = findLast();
-        last.next = new Node(x);
+        // общий случай
+        Node head = tail.next;
+        tail.next = new Node(x, head);
+        tail = tail.next;
     }
 
     // проверка на пустоту
