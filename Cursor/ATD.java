@@ -13,13 +13,16 @@ public class ATD {
         start = -1;
         space = 0;
         mass = new Element[size];
+        createSpace();
+    }
+
+    private void createSpace() {
 
         for (int i=0; i<size-1; i++) {
             mass[i] = new Element(i+1);
         }
         mass[size-1] = new Element(-1);
     }
-
 
     // конец массива
     public Position end() {
@@ -31,32 +34,10 @@ public class ATD {
 
     // вставка
     public void insert(Item x, Position p) {
-        /*
-        вставка в пустой список
-            space++
-            start++
-            создание объекта Element по item и p
-            next = -1
-        вставка в голову
-            создание Element в ячейке с номером space
-            next у этой ячейки сделать = start
-            start = space
-            space передается первому незанятому
-        вставка в конец
-            у конечного элемента поменять next = space
-            создать элемент в space
-            next у space = -1
-            space передается первому незанятому
-        общий случай
-            поиск элемента у которого next = p.p
-            сделать его next = space
-            в space поместить item и сделать его next = p.p
-            space передается первому незанятому
-         */
+        // начать с p.p == -1
 
-        // вставка в голову
-        //System.out.println(p.p + " " + start);
-        if (p.p == start) {
+        // вставка null
+        if (p.p == -1) {
             // вставка в пустой
             if (start == -1) {
                 //System.out.println(space + " " + start);
@@ -68,20 +49,8 @@ public class ATD {
                 System.out.println("1");
                 return;
             }
-            // вставка в голову, но список не пустой
 
-            mass[space].item = new Item(x);
-            mass[space].next = start;
-
-            start = space;
-            space = mass[space].next;
-            System.out.println("2");
-            return;
-        }
-
-        // вставка в конец
-        if (p.p == -1) {
-
+            // вставка в конец
             int last = findLast();
             mass[last].next = space;
 
@@ -94,20 +63,36 @@ public class ATD {
             return;
         }
 
-        // общий случай
+        // вставка в голову
+        //System.out.println(p.p + " " + start);
+        if (p.p == start) {
 
+            mass[space].item = new Item(x);
+            mass[space].next = start;
+
+            start = space;
+            space = mass[space].next;
+            System.out.println("2");
+            return;
+        }
+
+        // общий случай
         int prev = findPrev(p.p);
         if (prev < 0) {
             System.out.println("5");
             return;
         }
 
-        Element current = mass[mass[prev].next];
+        Element current = mass[p.p];
+        int temp = current.next;
         current.next = space;
         space = mass[space].next;
 
-        mass[space].item = current.item;
-        mass[space].next = current.next;
+        mass[p.p].item = x;
+
+        current = mass[current.next];
+        current.next = temp;
+
         System.out.println("4");
     }
 
@@ -115,11 +100,10 @@ public class ATD {
     private int findLast() {
 
         int current = start;
-        int prev = -1;
+        int prev;
 
-        while (current != -1) {
+        for (prev = -2; current != -1; current = mass[current].next) {
             prev = current;
-            current = mass[current].next;
         }
 
         return prev;
@@ -128,14 +112,12 @@ public class ATD {
     // найти предыдущий
     private int findPrev(int pos) {
 
-        int next = start;
+        int next;
         int current = -1;
 
-        while (next != -1) {
+        for (next = start; next != -1; next = mass[next].next) {
             if (next == pos) { return current; }
-
             current = next;
-            next = mass[next].next;
         }
 
         return -1;
@@ -188,28 +170,29 @@ public class ATD {
         удаление конца
             найти элемент перед концом и его next = -1
          */
+
+        if (p.p == -1) return;
         // удаление головы
         if (p.p == start) {
             start = mass[start].next;
+            mass[p.p].next = space;
+            space = p.p;
             return;
         }
-
         int prev = findPrev(p.p);
-        if (prev == -1) { throw new ArrayIndexOutOfBoundsException(); }
-
         // удаление конца
         if (mass[p.p].next == -1) {
             mass[prev].next = -1;
             return;
         }
-        // удаление середины
-        int del = mass[prev].next;
-
-        mass[prev].next = mass[mass[prev].next].next;
-        p.p = mass[prev].next;
-
-        mass[del].next = space;
-        space = del;
+        // общий случай
+        if (prev != -1 && p.p != -1) {
+            int cur = mass[prev].next;
+            mass[prev].next = mass[cur].next;
+            p.p = mass[prev].next;
+            mass[cur].next = space;
+            space = cur;
+        }
     }
 
     public Position next(Position p) {
@@ -220,12 +203,12 @@ public class ATD {
          */
         //p.print();
 
-        int prev = findPrev(p.p);
-        if ((prev == -1 && start == -1) || p.p == -1) { throw new ArrayIndexOutOfBoundsException(); }
-
-        if (prev == -1) {
+        if (p.p == start) {
             return new Position(mass[start].next);
         }
+
+        int prev = findPrev(p.p);
+        if ((prev == -1 && start == -1) || p.p == -1) { throw new ArrayIndexOutOfBoundsException(); }
 
         return new Position(mass[p.p].next);
     }
@@ -245,8 +228,10 @@ public class ATD {
         /*
         сделать space = 0 и start = -1
          */
+        // вернуть список пустых
         space = 0;
         start = -1;
+        createSpace();
     }
 
     public Position first() {
@@ -262,13 +247,8 @@ public class ATD {
          */
 
         if (start >= 0) {
-            int cur = start;
-            int r = 0;
-            while (cur != -1) {
+            for (int cur = start; cur != -1; cur = mass[cur].next) {
                 System.out.println(mass[cur].item.toString());
-                cur = mass[cur].next;
-                r++;
-                if(r==5) break;
             }
         }
         else System.out.println("List is empty");
