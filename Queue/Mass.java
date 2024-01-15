@@ -6,59 +6,66 @@ public class Mass {
 
     Item[] Q;
     int tail; // конец очереди
+    int head; // начало очереди
     final int size = 10;
 
     public Mass() {
 
-        tail = -1;
+        tail = 0;
+        head = 1;
         Q = new Item[size];
     }
+
+    // следующая позиция
+    private int getNext(int p) { return (p+1) % size; }
 
     // сделать пустым
     public void makenull() {
 
-        tail = -1;
+        tail = 0;
+        head = 1;
     }
 
     // вернуть первый в очереди
     public Item front() {
 
-        return new Item(Q[0]);
+        return new Item(Q[head]);
     }
 
     // вернуть первый и удалить его из очереди
     public Item dequeue() {
+        //System.out.println(tail + " " + head);
+        int newHead = head;
 
-        Item copy = new Item(Q[0]);
-        moveLeft();
-        return copy;
-    }
-
-    // сдвинуть влево
-    private void moveLeft() {
-
-        for (int i = 0; i < tail; i++) {
-            Q[i] = Q[i+1];
+        if (getNext(head) == tail) {
+            tail = 0;
+            head = 1;
         }
+        else head = getNext(head);
+
+        return new Item(Q[newHead]);
     }
 
     // вставить в конец очереди
     public void enqueue(Item x) {
 
-        if (tail < size-1) {
-            Q[++tail] = x;
+        if (getNext(tail + 1) == head) {
+            return;
         }
+        tail = getNext(tail);
+        //System.out.println(tail);
+        Q[tail] = new Item(x);
     }
 
     // проверка на пустоту
     public boolean empty() {
 
-        return tail < 0;
+        return getNext(tail) == head;
     }
 
     // проверка на полноту
     public boolean full() {
 
-        return tail == size-1;
+        return getNext(tail + 1) == head;
     }
 }
