@@ -18,64 +18,49 @@ public class ATD {
         вернуть позицию последнего
          */
 
-        return new Position(end);
+        return new Position(null);
     }
 
     // вставить объект в позицию
     public void insert(Item x, Position p) {
-        /*
-        если позиция null
-            если вставка в пустой list
-                создать нод в start
-                start = end
-            вставка в конец
-                привязать к end нод, переопределить end
-                переопределить prev
-        если в list 1 элемент вставить либо в голову либо в конец в зависимости от позиции
-            в start.next привязать новый нод
-            end = start.next
-            end.prev = start
-        если вставка в start
-            создать нод и вставить его в start
-            в start.next = старый start
-        вставка в середину
-            найти нод по позиции
-            привязать нод между предыдущим у current и current
-         */
 
-        if (start == null || end == null) {  // вставка в null
-            start = new Node(x);
-            end = start;
-            System.out.println('1');
+        // позиция нулевая
+        if (p.p == null) {
+            // список пуст
+            if (start == null) {
+                start = new Node(x, null, null);
+                end = start;
+                return;
+            }
+            // список не пустой - вставка после последнего
+            end.next = new Node(x,null, end);
+            end = end.next;
             return;
         }
-        if (end == start) { // в list 1 элемент вставка в старт
-            end = new Node(x);
-            //start.print();
-            //end.print();
-            start.next = end;
-            end.prev = start;
 
-            System.out.println('2');
+        // вставка в end
+        if (p.p == end) {
+            end.next = new Node(end.item, null, end);
+            end.item = x;
+            end = end.next;
             return;
         }
-        if (start == p.p) { // вставка в голову
-            Node node = new Node(x);
-            start.prev = node;
-            node.next = start;
-            start = start.prev;
-            //start.print();
-            //start.next.print();
-            System.out.println('3');
-            return;
+
+        // вставка в середину - проверка на наличие позиции
+        if (!checkPos(p.p)) { return; }
+
+        p.p.next = new Node(p.p.item, p.p.next, p.p.next.next);
+        p.p.item = x;
+    }
+
+    // проверка на наличие позиции
+    private boolean checkPos (Node node) {
+
+        for (Node cur = start; cur != null; cur = cur.next) {
+            if (cur == node) { return true; }
         }
-        // общий случай
-        Node copy = new Node(p.p);
-        p.p.item = new Item(x);
-        p.p.next = copy;
-        Node cur = p.p.next;
-        cur.prev = p.p;
-        System.out.println('4');
+
+        return false;
     }
 
     // вернуть позицию по объекту
@@ -105,49 +90,53 @@ public class ATD {
          IndexOutOfBoundsException
          */
 
-        if (p != null) {
-            Node current = start;
-            while(current != null) {
-                if (current.equals(p.p)) return new Item(current.item);
-                current = current.next;
-            }
+        if (checkPos(p.p) && p.p != null) {
+            return new Item(p.p.item);
+        } else {
+            throw new ArrayIndexOutOfBoundsException();
         }
-        throw new IndexOutOfBoundsException();
     }
 
     // проверка существования позиции
 
     // удалить объект в позиции
     public void delete(Position p) {
-        /*
-         * если удаляем start (p.equals(start)):
-         * 		ставим this.start = start.next;
-         * если удаляем end (p.equals(end)):
-         * 		ставим this.end = end.prev;
-         * иначе если середину или конец (p != null) идем по списку
-         *		если находится элемент (сверяем позицию по equals),
-         *          привязываем предыдущий к последующему от данного элемента,
-         *          меняем Position на последующий
-         * 		элемент не найден - ничего не делать
-         * иначе ничего не делать
-         */
 
-        if (p.p == start) {  // удаляем голову
+        // позиции нет - ничего не делать
+        if (p.p == null || !checkPos(p.p)) {
+            //System.out.println("1");
+            return;
+        }
+
+        // один элемент
+        if (start == end) {
+            start = null;
+            end = null;
+            //System.out.println("2");
+            return;
+        }
+
+        // удаление головы
+        if (p.p == start) {
             start = start.next;
             start.prev = null;
-            //System.out.println('1');
+            //System.out.println("3");
             return;
         }
-        if (p.p == end) {  // удаляем хвост
+
+        // удаление хвоста
+        if (p.p == end) {
             end = end.prev;
             end.next = null;
-            //System.out.println('2');
+            //System.out.println("4");
             return;
         }
-        // удаляем середину
-        Node cur = p.p.prev;
-        cur.next = p.p.next;
-        //System.out.println('3');
+
+        // общий случай
+        //p.p.prev.print();
+        p.p.prev.next = p.p.next;
+        p.p = p.p.next;
+        //System.out.println("5");
     }
 
     // вернуть последующую позицию
@@ -156,8 +145,11 @@ public class ATD {
          * если (p != null)
          * вернуть следующую позицию
          */
-        if(p != null) return new Position(p.p.next);
-        else return new Position(null);
+        if (!checkPos(p.p) || p.p == null) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        return new Position(p.p.next);
     }
 
     // вернуть предыдущую позицию
@@ -166,8 +158,11 @@ public class ATD {
          * если (p != null)
          * вернуть предыдущую позицию
          */
-        if(p != null) return new Position(p.p.prev);
-        else return new Position(null);
+        if (!checkPos(p.p) || p.p == null || p.p == start) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+
+        return new Position(p.p.prev);
     }
 
     // обнулить список
@@ -185,9 +180,7 @@ public class ATD {
         вернуть start
          */
 
-        if(start != null)
-            return new Position(start);
-        else return new Position(null);
+        return new Position(start);
     }
 
     // вывести на экран
@@ -197,20 +190,10 @@ public class ATD {
          */
         if (start == null && end == null) System.out.println("List is empty");
         else {
-            Node current = start;
-            while (true) {
-                System.out.println(current.item.toString());
-                if (current == end) break;
-                current = current.next;
+            for (Node cur = this.start; cur != null; cur = cur.next) {
+                System.out.println(cur.item.toString());
             }
         }
-        /*else {
-            Node current = end;
-            while (current != null) {
-                System.out.println(current.item.toString());
-                current = current.prev;
-            }
-        }*/
         System.out.println();
     }
 
@@ -223,12 +206,15 @@ public class ATD {
 
         // конструктор
         protected Node() {
+            this.item = null;
             this.next = null;
             this.prev = null;
         }
 
         // конструктор по Item
-        protected Node(Item item) {
+        protected Node(Item item, Node next, Node prev) {
+            this.next = next;
+            this.prev = prev;
             this.item = new Item(item);
         }
 
