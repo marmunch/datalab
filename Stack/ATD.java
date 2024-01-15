@@ -29,12 +29,10 @@ public class ADT {
     public Item pop() {
 
         //S.first().print();
-        if (!S.first().equal(S.end())) {
-            Item copy = new Item(S.retrieve(S.first()));
-            S.delete(S.first());
-            return copy;
-        }
-        return null;
+        Item result = new Item(S.retrieve(S.first()));
+        S.delete(S.first());
+
+        return result;
     }
 
     // добавить в стек
